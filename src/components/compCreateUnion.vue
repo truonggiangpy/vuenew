@@ -65,9 +65,9 @@
             class="container"
             style="text-align:center; font-size:20px; color: white"
           >
-            <div class="container">
+            <!-- <div class="container">
               <h1>Xác Nhận Xóa</h1>
-              <div><label>FormID: </label>{{ evenremove.id }}</div>
+              <div><label>FormID: </label>{{ evenremove.idform }}</div>
               <div><label>Temlate: </label>{{ evenremove.Temlate }}</div>
               <div><label>Type: </label>{{ evenremove.Type }}</div>
               <div><label>Company: </label>{{ evenremove.Company }}</div>
@@ -78,7 +78,7 @@
                 <label>ExpirationDate: </label>{{ evenremove.ExpirationDate }}
               </div>
               <div><label>Active: </label>{{ evenremove.Active }}</div>
-            </div>
+            </div> -->
           </header>
           <footer class="container1">
             <template v-if="create_confirm_boolean === 'Create'">

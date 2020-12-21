@@ -40,11 +40,11 @@
       <div class="tdata">
         <div
           class="flex-container"
-          v-for="(user,idx) in form"
-          :key="idx"
+          v-for="(user,index) in arrayTemTam"
+          :key="index"
           v-on:dblclick="Edit_Line"
         >
-          <div class="col1">{{ user.idfrom }}</div>
+          <div class="col1" v-on:click="change">{{ user.idfrom }}</div>
           <div class="col2" v-if="user.node2 == 'Edit'">{{ user.Temlate }}</div>
           <div class="col2" v-else-if="user.node2 == 'Cancel'">
             <input
@@ -66,7 +66,7 @@
               type="text"
               class="create"
               placeholder="Nhập Temlate"
-              v-model="formtam[index_edit].Temlate"
+              v-model="arrayTemTam[index_edit].Temlate"
               name="Temlate_Name"
             />
           </div>
@@ -91,7 +91,7 @@
               v-on:keyup.esc="Cancel_row"
               style="width: 90%"
               class="create"
-              v-model="formtam[index_edit].Type"
+              v-model="arrayTemTam[index_edit].Type"
               id="type"
               name="type"
             >
@@ -118,7 +118,7 @@
               v-on:keyup.enter="ConfirmEnter_row"
               v-on:keyup.esc="Cancel_row"
               style="width: 90%"
-              v-model="formtam[index_edit].Company"
+              v-model="arrayTemTam[index_edit].Company"
               type="text"
               class="create"
               id="fname"
@@ -146,7 +146,7 @@
               v-on:keyup.enter="ConfirmEnter_row"
               v-on:keyup.esc="Cancel_row"
               style="width: 90%"
-              v-model="formtam[index_edit].VersionDate"
+              v-model="arrayTemTam[index_edit].VersionDate"
               type="date"
               class="create"
               id="myDate"
@@ -173,7 +173,7 @@
               v-on:keyup.enter="ConfirmEnter_row"
               v-on:keyup.esc="Cancel_row"
               style="width: 90%"
-              v-model="formtam[index_edit].ExpirationDate"
+              v-model="arrayTemTam[index_edit].ExpirationDate"
               type="date"
               class="create"
               id="myDate"
@@ -199,7 +199,7 @@
             <select
               v-on:keyup.enter="ConfirmEnter_row"
               v-on:keyup.esc="Cancel_row"
-              v-model="formtam[index_edit].Active"
+              v-model="arrayTemTam[index_edit].Active"
               style="width: 90%"
               class="create"
               id="country"
@@ -210,12 +210,27 @@
             </select>
           </div>
           <div
+            id="dd"
             class="col8"
             v-if="user.node2 == 'Edit'"
             style="text-align: center"
           >
-            <a href="#" class="add" v-on:click="Edit">Edit</a>
-            <a href="#id01" class="remove" v-on:click="remove">remove</a>
+          <!-- <div class="dropup">
+            <a v-on:click="optionSetting" class="dropbtn">...</a>
+             <div class="dropup-content">
+              <a href="#home">Home</a>
+              <a href="#about">About</a>
+              <a href="#contact">Contact</a>
+            </div>
+          </div> -->
+        <div class="dropup">
+          <button class="dropbtn" v-on:click="dropLeft" check="0">...</button>
+          <div class="dropup-content">
+            <button v-on:click="edit">Edit</button>
+            <button href="#id01" v-on:click="removeLine">remove</button>
+            <!-- <button>Link 3</button> -->
+          </div>
+        </div>
           </div>
           <div
             class="col8"
@@ -243,107 +258,64 @@
           <a href="javascript:;" class="next"> &rarr; </a>
         </button>
       </div>
-
     </div>
-
+ <div>{{giang}}</div>
+ <div v-on:click="haha">{{giang}}</div>
   </div>
 </template>
 <script>
 export default {
   name: 'container',
   props: {
-    index_edit: String
+    arrayTem: [],
+    arrayTemTam: [],
+    indexEdit: String
   },
   data () {
     return {
-      form1: [],
+      giang: 'haha',
       idform: '',
       Temlate: '',
       Type: '',
       Company: '',
       VersionDate: '',
       ExpirationDate: '',
-      Active: '',
-      formtam: [],
-      form: [
-        // Temlate: this.Temlate,Type: this.Type, Company: this.Company,VersionDate: this.VersionDate, ExpirationDate: this.ExpirationDate, Active: this.Active
-        {
-          idfrom: '1115',
-          Temlate: 'bahaha hihhi ',
-          Type: 'Production',
-          Company: 'Peptico',
-          VersionDate: '17-12-2020',
-          ExpirationDate: '17-12-2020',
-          Active: 'Active',
-          node1: 'Remove',
-          node2: 'Edit'
-        },
-        {
-          idfrom: '1113',
-          Temlate: 'a3325243-AFM-B6-TV-RADIOCOMMERCIALS-11-15',
-          Type: 'Production',
-          Company: 'Haitico',
-          VersionDate: '20-11-2020',
-          ExpirationDate: '20-11-2020',
-          Active: 'Archive',
-          node1: 'Remove',
-          node2: 'Edit'
-        },
-        {
-          idfrom: '1111',
-          Temlate: 'huhuhahahahaahahahaah',
-          Type: 'Payoll',
-          Company: 'Haitico',
-          VersionDate: '25-12-2020',
-          ExpirationDate: '20-11-2020',
-          Active: 'Active',
-          node1: 'Remove',
-          node2: 'Edit'
-        },
-        {
-          idfrom: '1114',
-          Temlate: 'c324-AFM-B6-TV-RADIOCOMMERCIALS-11-15',
-          Type: 'Production',
-          Company: 'Peptico',
-          VersionDate: '20-11-2020',
-          ExpirationDate: '20-11-2020',
-          Active: 'Active',
-          node1: 'Remove',
-          node2: 'Edit'
-        },
-        {
-          idfrom: '1112',
-          Temlate: '1999-AFM-B6-TV-RADIOCOMMERCIALS-11-15',
-          Type: 'Payoll',
-          Company: 'Peptico',
-          VersionDate: '22-12-2020',
-          ExpirationDate: '20-11-2020',
-          Active: 'Archive',
-          node1: 'Remove',
-          node2: 'Edit'
-        }
-      ]
+      Active: ''
+
     }
   },
-  created () {
-    for (let i = 0; i <= this.form.length - 1; i++) {
-      this.formtam.push(this.form[i])
-    }
-  },
+
   computed: {
 
   },
   methods: {
-    giang: function () {
-      this.users.push(this.formtam)
+    haha (e) {
+      this.giang = 'giangpro'
     },
-    sortData (e) {
-      let tt = e.target.innerHTML
-      let data = {haha: tt}
-      this.$emit('SortDL', data)
+    change (e) {
+      this.formtam[0].idfrom = 'hahahaah'
     },
-    remove (e) {
-      const elementtable = event.target.parentNode.parentNode.childNodes
+    dropLeft (e) { // kiểm tra dropup hiển thị và ẩn
+      let checkEvent
+      try {
+        checkEvent = e.target.getAttribute('check') // nếu lỗi thì e là một đối tượng được gọi hàm trong methods
+        checkEvent = e.target
+      } catch (err) {
+        checkEvent = e
+      }
+      if (checkEvent.getAttribute('check') === '0') {
+        checkEvent.parentNode.style = 'display: block'
+        checkEvent.parentNode.childNodes[2].style = 'display: block'
+        checkEvent.setAttribute('check', '1')
+      } else {
+        checkEvent.parentNode.style = 'display: inline-block'
+        checkEvent.parentNode.childNodes[2].style = 'display: none'
+        checkEvent.setAttribute('check', '0')
+      }
+    },
+    edit (event) {
+      // this.giang = 'tao thay doi may day thi sao nao'
+      let elementtable = event.target.parentNode.parentNode.parentNode.parentNode.childNodes
       let getid = elementtable[0].innerHTML
       let getTemlate = elementtable[2].innerHTML
       let getType = elementtable[4].innerHTML
@@ -351,165 +323,72 @@ export default {
       let getVersionDate = elementtable[8].innerHTML
       let getExpirationDate = elementtable[10].innerHTML
       let getActive = elementtable[12].innerHTML
-      let thaydoi = 'Remove'
       let data1 = {
-        id: getid,
+        idfrom: getid,
         Temlate: getTemlate,
         Type: getType,
         Company: getCompany,
         ExpirationDate: getExpirationDate,
         VersionDate: getVersionDate,
         Active: getActive,
-        Change: thaydoi
+        node1: 'Confirm_row',
+        node2: 'Cancel_row'
       }
-      this.$emit('removeline', data1)
+      this.dropLeft(event.target.parentNode.parentNode.childNodes[0])
+      this.$emit('editLine', data1)
+      // let index = 0
+      // let check = true
+      // for (let [i, v] of this.form.entries()) {
+      //   if (String(data1.idfrom) === String(v.idfrom)) {
+      //     index = i
+      //   }
+      //   if (v.node2 === 'Cancel_row' || v.node2 === 'Cancel') {
+      //     check = false
+      //   }
+      // }
+
+      // if (check) {
+      //   this.index_edit = index
+      //   data1.ExpirationDate = this.convertDate(data1.ExpirationDate.trim(), '-', 'dd_mm_yyyy')
+      //   data1.VersionDate = this.convertDate(data1.VersionDate.trim(), '-', 'dd_mm_yyyy')
+      //   this.form[-2] = this.form[index]
+      //   this.form.splice(index, 1, data1)
+      // }
+
+      // this.form[-2].node2 = 'Edit'
+      // this.dropLeft(event.target.parentNode.parentNode.childNodes[0])
+      // this.formtam = []
+      // for (const [i] of this.form.entries()) {
+      //   this.formtam.push(this.form[i])
+      // }
     },
-    Cancel (e) {
-      let getidaddfilter = e.target.parentNode.parentNode.childNodes
-      let id = getidaddfilter[0].innerHTML
-      let DataAddfilter = {
-        id: id
-      }
-      this.$emit('Cancel_AddFilter', DataAddfilter)
-    },
-    ConfirmEnter_row (e) {
-      this.Confirm_row(e)
-    },
-    ConfirmEnter (e) {
-      this.Confirm(e)
-    },
-    Confirm (e) {
-      const lengthForm = e.target.parentNode.parentNode
-      let Temlate = lengthForm.childNodes[2].childNodes[0].value.length
-      let Type = lengthForm.childNodes[4].childNodes[0].value.length
-      let Company = lengthForm.childNodes[6].childNodes[0].value.length
-      let VersionDate = lengthForm.childNodes[8].childNodes[0].value.length
-      let ExpirationDate = lengthForm.childNodes[10].childNodes[0].value.length
-      let Active = lengthForm.childNodes[12].childNodes[0].value.length
-      if (Temlate === 0 || Type === 0 || Company === 0 || VersionDate === 0 || ExpirationDate === 0 || Active === 0) {
-        alert('Trường Dữ Liệu Chưa được nhập')
-      } else {
-        let getid = e.target.parentNode.parentNode.childNodes[0].innerHTML
-        let type, Acti
-        if (this.Type === '1') type = 'Payoll'
-        if (this.Type === '2') type = 'Production'
-        if (this.Active === '1') Acti = 'Active'
-        if (this.Active === '2') Acti = 'Archive'
-        let DataAddfilterC = {
-          idfrom: getid,
-          Temlate: this.Temlate,
-          Type: type,
-          Company: this.Company,
-          VersionDate: this.VersionDate,
-          ExpirationDate: this.ExpirationDate,
-          Active: Acti,
-          node1: 'Remove',
-          node2: 'Edit'
-        }
-        this.$emit('Confirm_AddFilter', DataAddfilterC)
-        // cập nhật rỗng cho các input khi them line mới
-        this.idform = ''
-        this.Temlate = ''
-        this.Type = ''
-        this.Company = ''
-        this.VersionDate = ''
-        this.ExpirationDate = ''
-        this.Active = ''
+    removeLine (e) {
+      this.evenremove = e
+      this.formtam = []
+      for (let i = 0; i <= this.form.length - 1; i++) {
+        this.formtam.push(this.form[i])
       }
     },
     Confirm_row (e) {
-      const lengthForm = e.target.parentNode.parentNode
-      let Temlate = lengthForm.childNodes[2].childNodes[0].value.length
-      let Type = lengthForm.childNodes[4].childNodes[0].value.length
-      let Company = lengthForm.childNodes[6].childNodes[0].value.length
-      let VersionDate = lengthForm.childNodes[8].childNodes[0].value.length
-      let ExpirationDate = lengthForm.childNodes[10].childNodes[0].value.length
-      let Active = lengthForm.childNodes[12].childNodes[0].value.length
-      if (Temlate === 0 || Type === 0 || Company === 0 || VersionDate === 0 || ExpirationDate === 0 || Active === 0) {
-        alert('Trường Dữ Liệu Chưa được nhập')
-      } else {
-        let getidaddfilterC = e.target.parentNode.parentNode.childNodes
-        let id = getidaddfilterC[0].innerHTML
-        let getTemlate = this.formtam[this.index_edit].Temlate
 
-        let getType = this.formtam[this.index_edit].Type
-        let getCompany = this.formtam[this.index_edit].Company
-        let getVersionDate = this.formtam[this.index_edit].VersionDate
-        let getExpirationDate = this.formtam[this.index_edit].ExpirationDate
-        let getActive = this.formtam[this.index_edit].Active
-        let DataAddfilterC = {
-          idfrom: id,
-          Temlate: getTemlate,
-          Type: getType,
-          Company: getCompany,
-          VersionDate: getVersionDate,
-          ExpirationDate: getExpirationDate,
-          Active: getActive,
-          node1: 'Remove',
-          node2: 'Edit'
-        }
-        this.$emit('Confirm_Edit', DataAddfilterC)
-        // cập nhật rỗng cho các input khi them line mới
-        this.Temlate = ''
-        this.Type = ''
-        this.Company = ''
-        this.VersionDate = ''
-        this.ExpirationDate = ''
-        this.Active = ''
-      }
     },
     Cancel_row (e) {
-      let getid = e.target.parentNode.parentNode.childNodes
-      let id = getid[0].innerHTML
-      let Data = {
-        idfrom: id
-      }
-      this.$emit('Cancel_Edit_row', Data)
-      // cập nhật rỗng cho các input khi them line mới
+
     },
-    Edit (e) {
-      let elementtable = event.target.parentNode.parentNode.childNodes
-      let getid = elementtable[0].innerHTML
-      let getTemlate = elementtable[2].innerHTML
-      let getType = elementtable[4].innerHTML
-      let getCompany = elementtable[6].innerHTML
-      let getVersionDate = elementtable[8].innerHTML
-      let getExpirationDate = elementtable[10].innerHTML
-      let getActive = elementtable[12].innerHTML
-      let data1 = {
-        idfrom: getid,
-        Temlate: getTemlate,
-        Type: getType,
-        Company: getCompany,
-        ExpirationDate: getExpirationDate,
-        VersionDate: getVersionDate,
-        Active: getActive,
-        node1: 'Confirm_row',
-        node2: 'Cancel_row'
-      }
-      this.$emit('Edit', data1)
+    ConfirmEnter_row (e) {
+
     },
     Edit_Line (e) {
-      let elementtable = event.target.parentNode.childNodes
-      let getid = elementtable[0].innerHTML
-      let getTemlate = elementtable[2].innerHTML
-      let getType = elementtable[4].innerHTML
-      let getCompany = elementtable[6].innerHTML
-      let getVersionDate = elementtable[8].innerHTML
-      let getExpirationDate = elementtable[10].innerHTML
-      let getActive = elementtable[12].innerHTML
-      let data1 = {
-        idfrom: getid,
-        Temlate: getTemlate,
-        Type: getType,
-        Company: getCompany,
-        ExpirationDate: getExpirationDate,
-        VersionDate: getVersionDate,
-        Active: getActive,
-        node1: 'Confirm_row',
-        node2: 'Cancel_row'
-      }
-      this.$emit('Editline', data1)
+    },
+    sortData (e) {
+    },
+    search (e) {
+    },
+    addtableline (e) {
+    },
+    FilterData (e) {
+    },
+    Handlechange (e) {
     }
   }
 }
@@ -517,7 +396,6 @@ export default {
 <style scoped>
 .container2 {
   margin: 5px;
-  flex: 1;
 }
 #control{
   display: flex;
@@ -596,6 +474,7 @@ a {
   padding: 5px;
 }
 .flex-container {
+  z-index: 1;
   min-width: 1100px;
   padding: 0px;
   margin: 0px;
@@ -637,7 +516,6 @@ a {
 #bang {
   flex: 1;
   position: relative;
-  border: 1px solid red;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   display: flex;
@@ -742,4 +620,45 @@ a {
 .col8 {
   width: 10%;
 }
+.dropbtn {
+  font-size: 20px;
+  height: 5px;
+  background-color: #ffffff;
+  border: 0px;
+  outline:#ffffff
+}
+
+.dropup {
+  position: relative;
+  display: inline-block;
+}
+
+.dropup-content {
+  border: 1px solid blue;
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 60px;
+  bottom: -20px;
+  right: 85px;
+  z-index: 1;
+}
+
+.dropup-content>button {
+ background-color: #ffffff;
+  color: black;
+  padding: 4px;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  width: 100%;
+  display: inline-block;
+}
+
+.dropup-content>button:hover {background-color: rgb(204, 204, 204)}
+
+/* .dropup:hover .dropup-content {
+  display: block;
+} */
+
 </style>

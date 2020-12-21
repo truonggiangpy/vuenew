@@ -1,12 +1,15 @@
 <template>
+<body>
   <div id="app">
 <!-- //lọc dữ liệu sắp xếp tìm kiếm -->
     <!-- <div>{{Loc}}</div> -->
     <compLeft/>
     <compRight/>
-    <compCreateUnion/>
+    <compCreateUnion
+    />
     <!-- <CompFilter/> -->
   </div>
+</body>
 </template>
 <script>
 import compLeft from './components/compLeft'
@@ -23,7 +26,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 #app {
   margin: 0px;
   padding: 0px;
