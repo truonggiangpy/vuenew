@@ -314,6 +314,8 @@ export default {
       sortACT: '',
       Active: '',
       search: '',
+      searchtam: [],
+      checkSearchtam: false,
       arrayTemtam: [],
       arrayTem: [
         // Temlate: this.Temlate,Type: this.Type, Company: this.Company,VersionDate: this.VersionDate, ExpirationDate: expirationDate, Active: this.Active
@@ -461,17 +463,22 @@ export default {
 
   },
   watch: {
-    search  () {
-      this.arrayTemtam = []
-      for (let [i] of this.arrayTem.entries()) {
-        this.arrayTemtam.push(this.arrayTem[i])
+    search () {
+      if (this.search.length !== 0) {
+        this.checkSearchtam = true
       }
-      for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
-        if (this.arrayTemtam[i].Temlate.includes(this.search)) {
+      this.searchtam = []
+      for (let [i] of this.arrayTem.entries()) {
+        this.searchtam.push(this.arrayTem[i])
+      }
+      for (let i = this.searchtam.length - 1; i >= 0; i--) {
+        if (this.searchtam[i].Temlate.includes(this.search)) {
         } else {
-          this.arrayTemtam.splice(i, 1)
+          this.searchtam.splice(i, 1)
         }
       }
+      this.trangtam = this.trang
+      this.trang = -10
     },
     trang () {
       if (this.trang < 0) {
@@ -486,11 +493,20 @@ export default {
       //   end = indexPage * 5 + 5
       // }
       let endArray
-      if (trangtam > this.arrayTem.length) endArray = this.arrayTem.length
-      else endArray = trangtam
-      // if (trangtam === this.arrayTem.length / 5) {
-      for (let i = trangtam - 5; i < endArray; i++) {
-        this.arrayTemtam.push(this.arrayTem[i])
+      if (this.checkSearchtam === true) {
+        if (trangtam > this.searchtam.length) endArray = this.searchtam.length
+        else endArray = trangtam
+        // if (trangtam === this.arrayTem.length / 5) {
+        for (let i = trangtam - 5; i < endArray; i++) {
+          this.arrayTemtam.push(this.searchtam[i])
+        }
+      } else {
+        if (trangtam > this.arrayTem.length) endArray = this.arrayTem.length
+        else endArray = trangtam
+        // if (trangtam === this.arrayTem.length / 5) {
+        for (let i = trangtam - 5; i < endArray; i++) {
+          this.arrayTemtam.push(this.arrayTem[i])
+        }
       }
     }
   },
@@ -530,6 +546,7 @@ export default {
       let getVersionDate = elementtable[8].innerHTML
       let getExpirationDate = elementtable[10].innerHTML
       let getActive = elementtable[12].innerHTML
+
       let data1 = {
         idfrom: getid,
         Temlate: getTemlate,
@@ -543,7 +560,6 @@ export default {
       }
       let index = 0
       let check = true
-
       for (let [i, v] of this.arrayTem.entries()) {
         if (String(data1.idfrom) === String(v.idfrom)) {
           index = i
@@ -552,7 +568,6 @@ export default {
           check = false
         }
       }
-
       if (check) {
         this.index_edit = index
         data1.ExpirationDate = this.convertDate(data1.ExpirationDate.trim(), '-', 'dd_mm_yyyy')
@@ -562,13 +577,15 @@ export default {
       }
       this.arrayTem[-2].node2 = 'Edit'
       this.dropLeft(event.target.parentNode.parentNode.childNodes[0])
-      this.arrayTemtam = []
-      for (let [, v] of this.arrayTem.entries()) {
-        this.arrayTemtam.push(v)
-      }
       // this.arrayTemtam = []
-      // this.trangtam = this.trang
-      // this.trang = -10
+
+      // for (let [i, v] of this.arrayTem.entries()) {
+      //   this.arrayTemtam.push(v)
+      //   alert(this.arrayTemtam[i].idform)
+      // }
+      // this.arrayTemtam = []
+      this.trangtam = this.trang
+      this.trang = -10
     },
     confirmEdit (e) {
       const lengtharrayTem = e.target.parentNode.parentNode
@@ -700,12 +717,12 @@ export default {
         this.arrayTem.splice(index, 1, data1)
       }
       this.arrayTem[-2].node2 = 'Edit'
-      this.arrayTemtam = []
-      for (let v of this.arrayTem) {
-        this.arrayTemtam.push(v)
-      }
-      // this.trangtam = this.trang
-      // this.trang = -10
+      // this.arrayTemtam = []
+      // for (let v of this.arrayTem) {
+      //   this.arrayTemtam.push(v)
+      // }
+      this.trangtam = this.trang
+      this.trang = -10
     },
     removeLine (e) {
       this.showModel = true
@@ -744,6 +761,14 @@ export default {
           check = false
         }
       }
+      if (this.search.length !== 0) {
+        alert('hiihi')
+        for (let [i] of this.checkSearchtam.entries()) {
+          if (String(e.id) === String(this.checkSearchtam[i].idfrom)) {
+            this.checkSearchtam.splice(i, 1)
+          }
+        }
+      }
       if (check) {
         this.arrayTem.splice(index, 1)
         this.$emit('removeline', e)
@@ -761,6 +786,7 @@ export default {
       this.showModel = e
     },
     clickCreateTemp (e) {
+      this.checkSearchtam = false
       this.showModel = true
       this.confirmBoolean = 'Create'
       // console.log("apphihi"+ this.create_confirm_boolean)
@@ -800,6 +826,7 @@ export default {
       this.showModel = false
     },
     addTableLine (e) {
+      this.checkSearchtam = false
       var data = {
         idfrom: '',
         Temlate: '',
@@ -903,6 +930,7 @@ export default {
       this.trang = -10
     },
     sortData (e) {
+      this.checkSearchtam = false
       let tt = e.target.innerHTML.slice(0, 4)
       this.arrayTemtam = []
       for (let i = 0; i <= this.arrayTem.length - 1; i++) {
@@ -1139,38 +1167,51 @@ export default {
       this.showFilter = true
     },
     confirmFilter (e) {
+      if (this.search.length !== 0) {
+        this.checkSearchtam = true
+      }
+      // this.searchtam = []
+      // for (let [i] of this.arrayTem.entries()) {
+      //   this.searchtam.push(this.arrayTem[i])
+      // }
+      // for (let i = this.searchtam.length - 1; i >= 0; i--) {
+      //   if (this.searchtam[i].Temlate.includes(this.search)) {
+      //   } else {
+      //     this.searchtam.splice(i, 1)
+      //   }
+      // }
       this.showFilter = false
-      this.arrayTemtam = []
+      this.searchtam = []
       for (let i = 0; i <= this.arrayTem.length - 1; i++) {
-        this.arrayTemtam.push(this.arrayTem[i])
+        this.searchtam.push(this.arrayTem[i])
       }
       if (e.checkall === 'loc') {
-        for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
-          if (this.arrayTemtam[i].Type.includes(e.Type)) {
+        for (let i = this.searchtam.length - 1; i >= 0; i--) {
+          if (this.searchtam[i].Type.includes(e.Type)) {
           } else {
-            this.arrayTemtam.splice(i, 1)
+            this.searchtam.splice(i, 1)
           }
         }
-        for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
-          if (this.arrayTemtam[i].Company.includes(e.Company)) {
+        for (let i = this.searchtam.length - 1; i >= 0; i--) {
+          if (this.searchtam[i].Company.includes(e.Company)) {
           } else {
-            this.arrayTemtam.splice(i, 1)
+            this.searchtam.splice(i, 1)
           }
         }
-        for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
-          if (this.arrayTemtam[i].Active.includes(e.Active)) {
+        for (let i = this.searchtam.length - 1; i >= 0; i--) {
+          if (this.searchtam[i].Active.includes(e.Active)) {
           } else {
-            this.arrayTemtam.splice(i, 1)
+            this.searchtam.splice(i, 1)
           }
         }
 
         //  if (e.VersionDate !== '' && e.VersionDate[4] === '-') { e.VersionDate = this.convertDate(e.VersionDate, '-', 'yyyy_mm_dd') }
         if (e.VersionDate1[4] === '-') {
-          for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
+          for (let i = this.searchtam.length - 1; i >= 0; i--) {
             let numberVer
-            let ngayv = Number(this.arrayTemtam[i].VersionDate.slice(0, 2))
-            let thangv = Number(this.arrayTemtam[i].VersionDate.slice(3, 5))
-            let namv = Number(this.arrayTemtam[i].VersionDate.slice(6, 10))
+            let ngayv = Number(this.searchtam[i].VersionDate.slice(0, 2))
+            let thangv = Number(this.searchtam[i].VersionDate.slice(3, 5))
+            let namv = Number(this.searchtam[i].VersionDate.slice(6, 10))
             numberVer = namv * 360 + thangv * 30 + ngayv
             let ngay
             let thang
@@ -1191,23 +1232,27 @@ export default {
             }
             if (dayNumber1 <= numberVer && numberVer <= datNumber2) {
             } else {
-              this.arrayTemtam.splice(i, 1)
+              this.searchtam.splice(i, 1)
             }
           }
         }
       } else {
       }
       this.checkFilterData = ''
+      this.trangtam = this.trang
+      this.trang = -10
     },
     closeFilter (e) {
       this.showFilter = false
     },
     allData (e) {
+      this.checkSearchtam = false
       this.showFilter = false
       this.arrayTemtam = []
       for (let [, v] of this.arrayTem.entries()) {
         this.arrayTemtam.push(v)
       }
+      this.trangtam = this.trang
       this.trang = -10
     },
     dropLeft (e) { // kiểm tra dropup hiển thị và ẩn

@@ -205,6 +205,7 @@ export default {
       // if (this.Temlate === '' && this.Type === '' && this.Company === '' && this.VersionDate === '' && this.ExpirationDate === '' && this.Active === '') {
       if (this.Temlate === '' && this.Type === '' && this.Company === '' && this.VersionDate === '' && this.ExpirationDate === '' && this.Active === '') {
         this.$emit('confirmCancel', true)
+        this.mess = ''
       } else {
         this.confirmCan = true
         this.confirmCamcell.Temlate = this.Temlate
