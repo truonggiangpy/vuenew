@@ -5,8 +5,6 @@
     <!-- <div>{{Loc}}</div> -->
     <compLeft/>
     <compRight/>
-    <compCreateUnion
-    />
     <!-- <CompFilter/> -->
   </div>
 </body>
@@ -14,15 +12,11 @@
 <script>
 import compLeft from './components/compLeft'
 import compRight from './components/compRight'
-import compCreateUnion from './components/compCreateUnion'
-import compFilter from './components/compFilter'
 export default {
   name: 'App',
   components: {
     compLeft,
-    compRight,
-    compCreateUnion,
-    compFilter
+    compRight
   }
 }
 </script>

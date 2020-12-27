@@ -4,20 +4,19 @@
       <div id='control'>
         <div style="color:blue">
           <a
-            v-on:click="Handlechange"
-            href="#id01"
+            @click="clickCreateTemp"
             id="Union"
             style="color: blue;"
             >+ Union Templates &nbsp; &nbsp;</a
           >
         </div>
         <div style="color:blue">
-          <a v-on:click="addtableline" href="#" id="Filter" style="color: blue;"
+          <a @click="addTableLine" href="#" id="Filter" style="color: blue;"
             >Add Data &nbsp; &nbsp;</a
           >
         </div>
           <div style="color:blue">
-          <a v-on:click="FilterData" href="#" id="FilterData" style="color: blue;"
+          <a @click="filterData" href="#" id="FilterData" style="color: blue;"
             >Filter data &nbsp; &nbsp;</a
           >
         </div>
@@ -27,29 +26,29 @@
       </div>
     </div>
     <div class="flex-container">
-      <div v-on:click="sortData" class="style col1" style="border-top-left-radius: 10px">Form ID#</div>
-      <div class="style col2" v-on:click="sortData">TemPlate Name</div>
-      <div class="style col3" v-on:click="sortData">Type</div>
-      <div class="style col4" v-on:click="sortData">Company</div>
-      <div class="style col5" v-on:click="sortData">Version Date</div>
-      <div class="style col6" v-on:click="sortData">Expiration D</div>
-      <div class="style col7" v-on:click="sortData">ACTIVE</div>
+      <div @click="sortData" class="style col1" style="border-top-left-radius: 10px">Form ID# {{sortfor}}</div>
+      <div class="style col2" @click="sortData">TemPlate Name {{sortTem}}</div>
+      <div class="style col3" @click="sortData">Type {{sortTyp}}</div>
+      <div class="style col4" @click="sortData">Company {{sortCom}}</div>
+      <div class="style col5" @click="sortData">Version Date {{sortVer}}</div>
+      <div class="style col6" @click="sortData">Expiration D {{sortExp}}</div>
+      <div class="style col7" @click="sortData">ACTIVE {{sortACT}}</div>
       <div class="style col8" style="border-top-right-radius: 10px"></div>
     </div>
     <div id="tablefull">
       <div class="tdata">
         <div
           class="flex-container"
-          v-for="(user,index) in arrayTemTam"
-          :key="index"
-          v-on:dblclick="Edit_Line"
+          v-for="(user,idx) in arrayTemtam"
+          :key="idx"
+          @dblclick="editLine"
         >
-          <div class="col1" v-on:click="change">{{ user.idfrom }}</div>
+          <div class="col1">{{ user.idfrom }}</div>
           <div class="col2" v-if="user.node2 == 'Edit'">{{ user.Temlate }}</div>
           <div class="col2" v-else-if="user.node2 == 'Cancel'">
             <input
-              v-on:keyup.esc="Cancel"
-              v-on:keyup.enter="ConfirmEnter"
+              @keyup.enter="confirmAddLine"
+              @keyup.esc="cancelAddLine"
               style="width: 90%; flex-grow: 1"
               type="text"
               class="create"
@@ -60,21 +59,21 @@
           </div>
           <div class="col2" v-else-if="user.node2 == 'Cancel_row'">
             <input
-              v-on:keyup.esc="Cancel_row"
-              v-on:keyup.enter="ConfirmEnter_row"
+              @keyup.esc="cancelEdit"
+              @keyup.enter="confirmEnter"
               style="width: 90%; flex-grow: 1"
               type="text"
               class="create"
               placeholder="Nhập Temlate"
-              v-model="arrayTemTam[index_edit].Temlate"
+              v-model="arrayTemtam[index_edit].Temlate"
               name="Temlate_Name"
             />
           </div>
           <div class="col3" v-if="user.node2 == 'Edit'">{{ user.Type }}</div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <select
-              v-on:keyup.enter="ConfirmEnter"
-              v-on:keyup.esc="Cancel"
+              @keyup.enter="confirmAddLine"
+              @keyup.esc="cancelAddLine"
               style="width: 90%"
               class="create"
               v-model="Type"
@@ -87,11 +86,11 @@
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel_row'">
             <select
-              v-on:keyup.enter="ConfirmEnter_row"
-              v-on:keyup.esc="Cancel_row"
+              @keyup.enter="confirmEnter"
+              @keyup.esc="cancelEdit"
               style="width: 90%"
               class="create"
-              v-model="arrayTemTam[index_edit].Type"
+              v-model="arrayTemtam[index_edit].Type"
               id="type"
               name="type"
             >
@@ -102,8 +101,8 @@
           <div class="col4" v-if="user.node2 == 'Edit'">{{ user.Company }}</div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <input
-              v-on:keyup.enter="ConfirmEnter"
-              v-on:keyup.esc="Cancel"
+              @keyup.enter="confirmAddLine"
+              @keyup.esc="cancelAddLine"
               style="width: 90%"
               v-model="Company"
               type="text"
@@ -115,10 +114,10 @@
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel_row'">
             <input
-              v-on:keyup.enter="ConfirmEnter_row"
-              v-on:keyup.esc="Cancel_row"
+              @keyup.enter="confirmEnter"
+              @keyup.esc="cancelEdit"
               style="width: 90%"
-              v-model="arrayTemTam[index_edit].Company"
+              v-model="arrayTemtam[index_edit].Company"
               type="text"
               class="create"
               id="fname"
@@ -131,8 +130,8 @@
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <input
-              v-on:keyup.enter="ConfirmEnter"
-              v-on:keyup.esc="Cancel"
+              @keyup.enter="confirmAddLine"
+              @keyup.esc="cancelAddLine"
               style="width: 90%"
               v-model="VersionDate"
               type="date"
@@ -143,10 +142,10 @@
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel_row'">
             <input
-              v-on:keyup.enter="ConfirmEnter_row"
-              v-on:keyup.esc="Cancel_row"
+              @keyup.enter="confirmEnter"
+              @keyup.esc="cancelEdit"
               style="width: 90%"
-              v-model="arrayTemTam[index_edit].VersionDate"
+              v-model="arrayTemtam[index_edit].VersionDate"
               type="date"
               class="create"
               id="myDate"
@@ -158,8 +157,8 @@
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <input
-              v-on:keyup.enter="ConfirmEnter"
-              v-on:keyup.esc="Cancel"
+              @keyup.enter="confirmAddLine"
+              @keyup.esc="cancelAddLine"
               style="width: 90%"
               v-model="ExpirationDate"
               type="date"
@@ -170,10 +169,10 @@
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel_row'">
             <input
-              v-on:keyup.enter="ConfirmEnter_row"
-              v-on:keyup.esc="Cancel_row"
+              @keyup.enter="confirmEnter"
+              @keyup.esc="cancelEdit"
               style="width: 90%"
-              v-model="arrayTemTam[index_edit].ExpirationDate"
+              v-model="arrayTemtam[index_edit].ExpirationDate"
               type="date"
               class="create"
               id="myDate"
@@ -183,8 +182,8 @@
           <div class="col7" v-if="user.node2 == 'Edit'">{{ user.Active }}</div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <select
-              v-on:keyup.enter="ConfirmEnter"
-              v-on:keyup.esc="Cancel"
+              @keyup.enter="confirmAddLine"
+              @keyup.esc="cancelAddLine"
               v-model="Active"
               style="width: 90%"
               class="create"
@@ -197,9 +196,9 @@
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel_row'">
             <select
-              v-on:keyup.enter="ConfirmEnter_row"
-              v-on:keyup.esc="Cancel_row"
-              v-model="arrayTemTam[index_edit].Active"
+              @keyup.enter="confirmEnter"
+              @keyup.esc="cancelEdit"
+              v-model="arrayTemtam[index_edit].Active"
               style="width: 90%"
               class="create"
               id="country"
@@ -216,7 +215,7 @@
             style="text-align: center"
           >
           <!-- <div class="dropup">
-            <a v-on:click="optionSetting" class="dropbtn">...</a>
+            <a @click="optionSetting" class="dropbtn">...</a>
              <div class="dropup-content">
               <a href="#home">Home</a>
               <a href="#about">About</a>
@@ -224,10 +223,10 @@
             </div>
           </div> -->
         <div class="dropup">
-          <button class="dropbtn" v-on:click="dropLeft" check="0">...</button>
+          <button class="dropbtn" @click="dropLeft" check="0">...</button>
           <div class="dropup-content">
-            <button v-on:click="edit">Edit</button>
-            <button href="#id01" v-on:click="removeLine">remove</button>
+            <button @click="edit">Edit</button>
+            <button ><a style ="color: rgb(0, 0, 0)" @click="removeLine"  href="#id01">remove</a></button>
             <!-- <button>Link 3</button> -->
           </div>
         </div>
@@ -237,84 +236,292 @@
             v-else-if="user.node2 == 'Cancel'"
             style="text-align: center"
           >
-            <a href="#" class="add" v-on:click="Confirm">Confirm</a>
-            <a href="#" class="remove" v-on:click="Cancel">Cancel</a>
+            <a href="#" class="add" @click="confirmAddLine">Confirm</a>
+            <a href="#" class="remove" @click="cancelAddLine">Cancel</a>
           </div>
           <div
             class="col8"
             v-else-if="user.node2 == 'Cancel_row'"
             style="text-align: center"
           >
-            <a href="#" class="add" v-on:click="Confirm_row">Confirm</a>
-            <a href="#" class="remove" v-on:click="Cancel_row">Cancel</a>
+            <a href="#" class="add" @click="confirmEdit">Confirm</a>
+            <a href="#" class="remove" @click="cancelEdit">Cancel</a>
           </div>
         </div>
       </div>
       <div id="nextpage">
-        <button class="nextpage" name="button" type="button">
+        <button class="nextpage" name="button" type="button " v-on:click="back">
           <a href="javascript:;" class="next"> &larr; </a>
         </button>
-        <button class="nextpage" name="button" type="button">
+        <label>{{trang}}</label>
+        <button class="nextpage" name="button" type="button" v-on:click="next">
           <a href="javascript:;" class="next"> &rarr; </a>
         </button>
       </div>
     </div>
- <div>{{giang}}</div>
- <div v-on:click="haha">{{giang}}</div>
+    <compCreateUnion
+     @confirmRemove="confirmRemove"
+     @cancelRemove="cancelRemove"
+     @createTem="createTem"
+     @confirmCancel="confirmCancel"
+     :confirmBoolean="confirmBoolean"
+     :evenRemove="evenRemove"
+     v-show="showModel"
+    />
+    <compFilter
+    @confirmFilter="confirmFilter"
+    @closeFilter="closeFilter"
+    @allData="allData"
+    v-show="showFilter"
+    />
   </div>
+
 </template>
 <script>
+import compCreateUnion from './compCreateUnion.vue'
+import compFilter from './compFilter.vue'
 export default {
   name: 'container',
+  components: {
+    compCreateUnion,
+    compFilter
+  },
   props: {
-    arrayTem: [],
-    arrayTemTam: [],
-    indexEdit: String
+    // index_edit: String
   },
   data () {
     return {
-      giang: 'haha',
-      idform: '',
+      evenRemove: {},
+      trangtam: '',
+      trang: 0,
+      showFilter: false,
+      showModel: false,
+      typeSort: 'up',
+      confirmBoolean: '',
+      index_edit: '',
+      idarrayTem: '',
       Temlate: '',
       Type: '',
       Company: '',
       VersionDate: '',
       ExpirationDate: '',
-      Active: ''
-
+      sortfor: '',
+      sortTem: '',
+      sortTyp: '',
+      sortCom: '',
+      sortVer: '',
+      sortExp: '',
+      sortACT: '',
+      Active: '',
+      search: '',
+      arrayTemtam: [],
+      arrayTem: [
+        // Temlate: this.Temlate,Type: this.Type, Company: this.Company,VersionDate: this.VersionDate, ExpirationDate: expirationDate, Active: this.Active
+        {
+          idfrom: '1101',
+          Temlate: 'vahaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '17-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1102',
+          Temlate: 'cahaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '18-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1103',
+          Temlate: 'aahaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '13-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1104',
+          Temlate: 'uuuhaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '12-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1105',
+          Temlate: 'kkkaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '11-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1106',
+          Temlate: 'mmmaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '17-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1107',
+          Temlate: 'nnnaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '22-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1108',
+          Temlate: 'ooaha hihhi ',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '21-12-2020',
+          ExpirationDate: '17-12-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1109',
+          Temlate: 'a3325243-AFM-B6-TV-RADIOCOMMERCIALS-11-15',
+          Type: 'Production',
+          Company: 'Haitico',
+          VersionDate: '24-11-2020',
+          ExpirationDate: '20-11-2020',
+          Active: 'Archive',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1110',
+          Temlate: 'xxuhahahahaahahahaah',
+          Type: 'Payoll',
+          Company: 'Haitico',
+          VersionDate: '25-12-2020',
+          ExpirationDate: '20-11-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1111',
+          Temlate: 'c324-AFM-B6-TV-RADIOCOMMERCIALS-11-15',
+          Type: 'Production',
+          Company: 'Peptico',
+          VersionDate: '26-11-2020',
+          ExpirationDate: '20-11-2020',
+          Active: 'Active',
+          node1: 'Remove',
+          node2: 'Edit'
+        },
+        {
+          idfrom: '1112',
+          Temlate: '1999-AFM-B6-TV-RADIOCOMMERCIALS-11-15',
+          Type: 'Payoll',
+          Company: 'Peptico',
+          VersionDate: '27-12-2020',
+          ExpirationDate: '20-11-2020',
+          Active: 'Archive',
+          node1: 'Remove',
+          node2: 'Edit'
+        }
+      ]
     }
   },
-
+  created () {
+    for (let i = 0; i < 5; i++) {
+      this.arrayTemtam.push(this.arrayTem[i])
+    }
+  },
   computed: {
 
   },
-  methods: {
-    haha (e) {
-      this.giang = 'giangpro'
-    },
-    change (e) {
-      this.formtam[0].idfrom = 'hahahaah'
-    },
-    dropLeft (e) { // kiểm tra dropup hiển thị và ẩn
-      let checkEvent
-      try {
-        checkEvent = e.target.getAttribute('check') // nếu lỗi thì e là một đối tượng được gọi hàm trong methods
-        checkEvent = e.target
-      } catch (err) {
-        checkEvent = e
+  watch: {
+    search  () {
+      this.arrayTemtam = []
+      for (let [i] of this.arrayTem.entries()) {
+        this.arrayTemtam.push(this.arrayTem[i])
       }
-      if (checkEvent.getAttribute('check') === '0') {
-        checkEvent.parentNode.style = 'display: block'
-        checkEvent.parentNode.childNodes[2].style = 'display: block'
-        checkEvent.setAttribute('check', '1')
+      for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
+        if (this.arrayTemtam[i].Temlate.includes(this.search)) {
+        } else {
+          this.arrayTemtam.splice(i, 1)
+        }
+      }
+    },
+    trang () {
+      if (this.trang < 0) {
+        this.trang = this.trangtam
+      }
+      // let lengthrow = this.arrayTem.length
+      // let indexPage = parseInt(lengthrow / 5)
+      this.arrayTemtam = []
+      // let end
+      let trangtam = 5 * (this.trang + 1)
+      // if (indexPage === this.trang) { end = this.arrayTem.length - 1 } else {
+      //   end = indexPage * 5 + 5
+      // }
+      let endArray
+      if (trangtam > this.arrayTem.length) endArray = this.arrayTem.length
+      else endArray = trangtam
+      // if (trangtam === this.arrayTem.length / 5) {
+      for (let i = trangtam - 5; i < endArray; i++) {
+        this.arrayTemtam.push(this.arrayTem[i])
+      }
+    }
+  },
+  methods: {
+    back (e) {
+      let indexPage
+      let lengthrow = this.arrayTem.length
+      if (lengthrow % 5 !== 0) {
+        indexPage = parseInt(lengthrow / 5)
       } else {
-        checkEvent.parentNode.style = 'display: inline-block'
-        checkEvent.parentNode.childNodes[2].style = 'display: none'
-        checkEvent.setAttribute('check', '0')
+        indexPage = parseInt(lengthrow / 5) - 1
+      }
+      this.trang = this.trang - 1
+      if (this.trang < 0) {
+        this.trang = indexPage
+      }
+    },
+    next (e) {
+      let indexPage
+      let lengthrow = this.arrayTem.length
+      if (lengthrow % 5 !== 0) {
+        indexPage = parseInt(lengthrow / 5)
+      } else {
+        indexPage = parseInt(lengthrow / 5) - 1
+      }
+      this.trang = this.trang + 1
+      if (this.trang > indexPage) {
+        this.trang = 0
       }
     },
     edit (event) {
-      // this.giang = 'tao thay doi may day thi sao nao'
       let elementtable = event.target.parentNode.parentNode.parentNode.parentNode.childNodes
       let getid = elementtable[0].innerHTML
       let getTemlate = elementtable[2].innerHTML
@@ -334,61 +541,706 @@ export default {
         node1: 'Confirm_row',
         node2: 'Cancel_row'
       }
+      let index = 0
+      let check = true
+
+      for (let [i, v] of this.arrayTem.entries()) {
+        if (String(data1.idfrom) === String(v.idfrom)) {
+          index = i
+        }
+        if (v.node2 === 'Cancel_row' || v.node2 === 'Cancel') {
+          check = false
+        }
+      }
+
+      if (check) {
+        this.index_edit = index
+        data1.ExpirationDate = this.convertDate(data1.ExpirationDate.trim(), '-', 'dd_mm_yyyy')
+        data1.VersionDate = this.convertDate(data1.VersionDate.trim(), '-', 'dd_mm_yyyy')
+        this.arrayTem[-2] = this.arrayTem[index]
+        this.arrayTem.splice(index, 1, data1)
+      }
+      this.arrayTem[-2].node2 = 'Edit'
       this.dropLeft(event.target.parentNode.parentNode.childNodes[0])
-      this.$emit('editLine', data1)
-      // let index = 0
-      // let check = true
-      // for (let [i, v] of this.form.entries()) {
-      //   if (String(data1.idfrom) === String(v.idfrom)) {
-      //     index = i
-      //   }
-      //   if (v.node2 === 'Cancel_row' || v.node2 === 'Cancel') {
-      //     check = false
-      //   }
-      // }
+      this.arrayTemtam = []
+      for (let [, v] of this.arrayTem.entries()) {
+        this.arrayTemtam.push(v)
+      }
+      // this.arrayTemtam = []
+      // this.trangtam = this.trang
+      // this.trang = -10
+    },
+    confirmEdit (e) {
+      const lengtharrayTem = e.target.parentNode.parentNode
+      let Temlate = lengtharrayTem.childNodes[2].childNodes[0].value.length
+      if (Temlate === 0) {
+        alert('Trường Dữ Liệu Chưa được nhập')
+      } else {
+        let getidaddfilterC = e.target.parentNode.parentNode.childNodes
+        let id = getidaddfilterC[0].innerHTML
+        let getTemlate = this.arrayTemtam[this.index_edit].Temlate
+        let getType = this.arrayTemtam[this.index_edit].Type
+        let getCompany = this.arrayTemtam[this.index_edit].Company
+        let getVersionDate = this.arrayTemtam[this.index_edit].VersionDate
+        let getExpirationDate = this.arrayTemtam[this.index_edit].ExpirationDate
+        let getActive = this.arrayTemtam[this.index_edit].Active
+        let DataAddfilterC = {
+          idfrom: id,
+          Temlate: getTemlate,
+          Type: getType,
+          Company: getCompany,
+          VersionDate: getVersionDate,
+          ExpirationDate: getExpirationDate,
+          Active: getActive,
+          node1: 'Remove',
+          node2: 'Edit'
+        }
+        let index = 0
+        DataAddfilterC.ExpirationDate = this.convertDate(DataAddfilterC.ExpirationDate, '-', 'yyyy_mm_dd')
+        DataAddfilterC.VersionDate = this.convertDate(DataAddfilterC.VersionDate, '-', 'yyyy_mm_dd')
+        // for (i = 0; i < this.arrayTem.length; i++) {
+        //   if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
+        //     index = i
+        //   }
+        // }
+        // for (let i in this.arrayTem) {
+        //   if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
+        //     index = i
+        //   }
+        // }
+        this.arrayTem.forEach((v, i) => { // foreach duyetj từ 0 - length
+          if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
+            index = i
+          }
+        })
+        this.arrayTem.splice(index, 1, DataAddfilterC)
+        this.arrayTemtam = []
+        this.trangtam = this.trang
+        this.trang = -10
+        // for (let i in this.arrayTem) {
+        //   this.arrayTemtam.push(this.arrayTem[i])
+        // }
+        // for (const v of this.arrayTem) {
+        //   this.arrayTemtam.push(v)
+        // }
+        // this.arrayTem.forEach((v, i) => // foreach duyetj từ 0 - length
+        //   this.arrayTemtam.push(v)
+        // )
+        // for (let i = 0; i <= this.arrayTem.length - 1; i++) {
+        //   this.arrayTemtam.push(this.arrayTem[i])
+        // }
+      }
+      // cập nhật rỗng cho các input khi them line mới
+      this.Temlate = ''
+      this.Type = ''
+      this.Company = ''
+      this.VersionDate = ''
+      this.expirationDate = ''
+      this.Active = ''
+    },
+    cancelEdit (e) {
+      let getid = e.target.parentNode.parentNode.childNodes
+      let id = getid[0].innerHTML
+      let Data = {
+        idfrom: id
+      }
 
-      // if (check) {
-      //   this.index_edit = index
-      //   data1.ExpirationDate = this.convertDate(data1.ExpirationDate.trim(), '-', 'dd_mm_yyyy')
-      //   data1.VersionDate = this.convertDate(data1.VersionDate.trim(), '-', 'dd_mm_yyyy')
-      //   this.form[-2] = this.form[index]
-      //   this.form.splice(index, 1, data1)
+      let index = 0
+      for (let [i] of this.arrayTem.entries()) {
+        if (Data.idfrom === this.arrayTem[i].idfrom) {
+          index = i
+        }
+      }
+      this.arrayTem.splice(index, 1, this.arrayTem[-2])
+      // this.arrayTemtam = []
+      // for (let v of this.arrayTem) {
+      //   this.arrayTemtam.push(v)
       // }
-
-      // this.form[-2].node2 = 'Edit'
-      // this.dropLeft(event.target.parentNode.parentNode.childNodes[0])
-      // this.formtam = []
-      // for (const [i] of this.form.entries()) {
-      //   this.formtam.push(this.form[i])
+      this.trangtam = this.trang
+      this.trang = -10
+      // for (let i = 0; i <= this.arrayTem.length - 1; i++) {
+      //   this.arrayTemtam.push(this.arrayTem[i])
       // }
+    },
+    editLine (e) {
+      let elementtable = event.target.parentNode.childNodes
+      let getid = elementtable[0].innerHTML
+      let getTemlate = elementtable[2].innerHTML
+      let getType = elementtable[4].innerHTML
+      let getCompany = elementtable[6].innerHTML
+      let getVersionDate = elementtable[8].innerHTML
+      let getExpirationDate = elementtable[10].innerHTML
+      let getActive = elementtable[12].innerHTML
+      let data1 = {
+        idfrom: getid,
+        Temlate: getTemlate,
+        Type: getType,
+        Company: getCompany,
+        ExpirationDate: getExpirationDate,
+        VersionDate: getVersionDate,
+        Active: getActive,
+        node1: 'Confirm_row',
+        node2: 'Cancel_row'
+      }
+      let index = 0
+      let check = true
+      for (let [i] of this.arrayTem.entries()) {
+        if (String(data1.idfrom) === String(this.arrayTem[i].idfrom)) { // cùng dữ liệu nếu không sẻ bị lỗi
+          index = i
+        }
+        if (this.arrayTem[i].node2 === 'Cancel_row' || this.arrayTem[i].node2 === 'Cancel') {
+          check = false
+        }
+      }
+      if (check) {
+        this.index_edit = index
+        data1.ExpirationDate = this.convertDate(data1.ExpirationDate.trim(), '-', 'dd_mm_yyyy')
+        data1.VersionDate = this.convertDate(data1.VersionDate.trim(), '-', 'dd_mm_yyyy')
+        this.arrayTem[-2] = this.arrayTem[index]
+        this.arrayTem.splice(index, 1, data1)
+      }
+      this.arrayTem[-2].node2 = 'Edit'
+      this.arrayTemtam = []
+      for (let v of this.arrayTem) {
+        this.arrayTemtam.push(v)
+      }
+      // this.trangtam = this.trang
+      // this.trang = -10
     },
     removeLine (e) {
-      this.evenremove = e
-      this.formtam = []
-      for (let i = 0; i <= this.form.length - 1; i++) {
-        this.formtam.push(this.form[i])
+      this.showModel = true
+      const elementtable = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.childNodes
+      let getid = elementtable[0].innerHTML
+      let getTemlate = elementtable[2].innerHTML
+      let getType = elementtable[4].innerHTML
+      let getCompany = elementtable[6].innerHTML
+      let getVersionDate = elementtable[8].innerHTML
+      let getExpirationDate = elementtable[10].innerHTML
+      let getActive = elementtable[12].innerHTML
+      let thaydoi = 'Remove'
+      this.dropLeft(event.target.parentNode.parentNode.parentNode.childNodes[0])
+      this.confirmBoolean = 'Remove'
+      let data1 = {
+        id: getid,
+        Temlate: getTemlate,
+        Type: getType,
+        Company: getCompany,
+        ExpirationDate: getExpirationDate,
+        VersionDate: getVersionDate,
+        Active: getActive,
+        Change: thaydoi
+      }
+      this.evenRemove = data1
+    },
+    confirmRemove (e) {
+      this.showModel = false
+      let index = 0
+      let check = true
+      for (let [i] of this.arrayTem.entries()) {
+        if (String(e.id) === String(this.arrayTem[i].idfrom)) {
+          index = i
+        }
+        if (this.arrayTem[i].node2 === 'Cancel_row' || this.arrayTem[i].node2 === 'Cancel') {
+          check = false
+        }
+      }
+      if (check) {
+        this.arrayTem.splice(index, 1)
+        this.$emit('removeline', e)
+      } else {
+        alert('đang có trường xử lý')
+      }
+      this.trangtam = this.trang
+      this.trang = -10
+      // this.arrayTemtam = []
+      // for (let v of this.arrayTem) {
+      //   this.arrayTemtam.push(v)
+      // }
+    },
+    cancelRemove (e) {
+      this.showModel = e
+    },
+    clickCreateTemp (e) {
+      this.showModel = true
+      this.confirmBoolean = 'Create'
+      // console.log("apphihi"+ this.create_confirm_boolean)
+      // this.$emit('changeeven',e)
+      this.arrayTemtam = []
+      this.trangtam = this.trang
+      this.trang = -10
+    },
+    createTem (e) {
+      this.showModel = false
+      let check = true
+      e.ExpirationDate = this.convertDate(e.ExpirationDate, '-', 'yyyy_mm_dd')
+      e.VersionDate = this.convertDate(e.VersionDate, '-', 'yyyy_mm_dd')
+      e.idfrom = this.randomNumber()
+      if (this.arrayTem.length === 0) { this.arrayTem[-1] = e }
+      // if (this.arrayTem[this.arrayTem.length - 1].node2 !== 'Cancel') {
+      //   this.arrayTem.push(e) // cập nhật lại giá trị arrayTem
+      for (let [i] of this.arrayTem.entries()) {
+        if (this.arrayTem[i].node2 === 'Cancel_row' || this.arrayTem[i].node2 === 'Cancel') {
+          check = false
+        }
+      }
+      if (check) {
+        this.arrayTem.push(e)
+      } else {
+        alert('Đang Tạo Bảng bằng dòng, hãy Bấm Cancel để quay lại')
+      }
+      this.arrayTem.Temlate = this.arrayTem.Temlate + ' '
+      this.create_confirm_boolean = e.return_create_confirm_boolean
+      this.arrayTemtam = []
+      this.trang = -10
+    },
+    confirmEnter (e) {
+      this.confirmEdit(e)
+    },
+    confirmCancel (e) { // dùng để xác nhận cancel khi đang tạo teamplate
+      this.showModel = false
+    },
+    addTableLine (e) {
+      var data = {
+        idfrom: '',
+        Temlate: '',
+        Type: '',
+        Company: '',
+        VersionDate: '',
+        ExpirationDate: '',
+        Active: '',
+        node1: 'Confirm',
+        node2: 'Cancel'
+      }
+      let check = true
+      for (let [i] of this.arrayTem.entries()) {
+        if (this.arrayTem[i].node2 === 'Cancel_row' || this.arrayTem[i].node2 === 'Cancel') {
+          check = false
+        }
+      }
+      let indexAddLine = this.trang * 5 + 4
+
+      if (check) {
+        data.idfrom = this.randomNumber()
+        this.arrayTem.splice(indexAddLine, 0, data)
+      }
+      // this.arrayTemtam = []
+      // for (let [, v] of this.arrayTem.entries()) {
+      //   this.arrayTemtam.push(v)
+      // }
+      this.trangtam = this.trang
+      this.trang = -10
+      this.Temlate = ''
+      this.Type = ''
+      this.Company = ''
+      this.VersionDate = ''
+      this.expirationDate = ''
+      this.Active = ''
+    },
+    confirmAddLine (e) {
+      const lengtharrayTem = e.target.parentNode.parentNode
+      let Temlate = lengtharrayTem.childNodes[2].childNodes[0].value.length
+      if (Temlate === 0) {
+      } else {
+        let getid = e.target.parentNode.parentNode.childNodes[0].innerHTML
+        let type, Acti
+        if (this.Type === '1') type = 'Payoll'
+        if (this.Type === '2') type = 'Production'
+        if (this.Active === '1') Acti = 'Active'
+        if (this.Active === '2') Acti = 'Archive'
+        let DataAddfilterC = {
+          idfrom: getid,
+          Temlate: this.Temlate,
+          Type: type,
+          Company: this.Company,
+          VersionDate: this.VersionDate,
+          ExpirationDate: this.expirationDate,
+          Active: Acti,
+          node1: 'Remove',
+          node2: 'Edit'
+        }
+        DataAddfilterC.ExpirationDate = this.convertDate(DataAddfilterC.ExpirationDate, '-', 'yyyy_mm_dd')
+        DataAddfilterC.VersionDate = this.convertDate(DataAddfilterC.VersionDate, '-', 'yyyy_mm_dd')
+        let indexAddLine = this.trang * 5 + 4
+        this.arrayTem.splice(indexAddLine, 1, DataAddfilterC)// thay thế phần từ cuối cùng
+        // this.arrayTem.push(e)
+        //   this.Temlate = "";
+        //   this.Type = "";
+        //   this.Company = "";
+        //   this.VersionDate = "";
+        //   expirationDate = "";
+        //   this.Active = "";
+        // this.arrayTemtam = []
+        // for (let [, v] of this.arrayTem.entries()) {
+        //   this.arrayTemtam.push(v)
+        // }
+        this.trangtam = this.trang
+        this.trang = -10
+        // cập nhật rỗng cho các input khi them line mới
+        this.idarrayTem = ''
+        this.Temlate = ''
+        this.Type = ''
+        this.Company = ''
+        this.VersionDate = ''
+        this.expirationDate = ''
+        this.Active = ''
       }
     },
-    Confirm_row (e) {
-
-    },
-    Cancel_row (e) {
-
-    },
-    ConfirmEnter_row (e) {
-
-    },
-    Edit_Line (e) {
+    cancelAddLine (e) {
+      let indexAddLine = this.trang * 5 + 4
+      this.arrayTem.splice(indexAddLine, 1)
+      // this.arrayTemtam = []
+      // for (let [, v] of this.arrayTem.entries()) {
+      //   this.arrayTemtam.push(v)
+      // }
+      this.trangtam = this.trang
+      this.trang = -10
     },
     sortData (e) {
+      let tt = e.target.innerHTML.slice(0, 4)
+      this.arrayTemtam = []
+      for (let i = 0; i <= this.arrayTem.length - 1; i++) {
+        this.arrayTemtam.push(this.arrayTem[i])
+      }
+      switch (tt) {
+        case 'Form':
+          this.sortTem = ''
+          this.sortTyp = ''
+          this.sortCom = ''
+          this.sortVer = ''
+          this.sortExp = ''
+          this.sortACT = ''
+          if (this.typeSort === 'up') {
+            for (let i = 0; i < this.arrayTemtam.length - 1; i++) { // buble sort
+              for (let j = this.arrayTemtam.length - 1; j > 0; j--) {
+                if (this.arrayTemtam[j].idfrom < this.arrayTemtam[ j - 1 ].idfrom) {
+                  let tam = {}
+                  tam = this.arrayTemtam[j]
+                  this.arrayTemtam[j] = this.arrayTemtam[ j - 1 ]
+                  this.arrayTemtam[ j - 1 ] = tam
+                }
+              }
+            }
+            this.sortfor = '↓'
+            this.typeSort = 'down'
+          } else {
+            for (let i = 0; i < this.arrayTemtam.length - 1; i++) { // buble sort
+              for (let j = this.arrayTemtam.length - 1; j > 0; j--) {
+                if (this.arrayTemtam[j].idfrom > this.arrayTemtam[ j - 1 ].idfrom) {
+                  let tam = {}
+                  tam = this.arrayTemtam[j]
+                  this.arrayTemtam[j] = this.arrayTemtam[ j - 1 ]
+                  this.arrayTemtam[ j - 1 ] = tam
+                }
+              }
+            }
+            this.sortfor = '↑'
+            this.typeSort = 'up'
+          }
+
+          break
+        case 'Type':
+          this.sortfor = ''
+          this.sortTem = ''
+          this.sortCom = ''
+          this.sortVer = ''
+          this.sortExp = ''
+          this.sortACT = ''
+          if (this.typeSort === 'up') {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Type.toLowerCase()
+              let titleB = b.Type.toLowerCase()
+              if (titleA < titleB) return -1
+              if (titleA > titleB) return 1
+              return 0
+            })
+            this.sortTyp = '↓'
+            this.typeSort = 'down'
+          } else {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Type.toLowerCase()
+              let titleB = b.Type.toLowerCase()
+              if (titleA < titleB) return 1
+              if (titleA > titleB) return -1
+              return 0
+            })
+            this.sortTyp = '↑'
+            this.typeSort = 'up'
+          }
+          break
+        case 'TemP':
+          this.sortfor = ''
+          this.sortTyp = ''
+          this.sortCom = ''
+          this.sortVer = ''
+          this.sortExp = ''
+          this.sortACT = ''
+          if (this.typeSort === 'up') {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Temlate.toLowerCase()
+              let titleB = b.Temlate.toLowerCase()
+              if (titleA < titleB) return -1
+              if (titleA > titleB) return 1
+              return 0
+            })
+            this.sortTem = '↓'
+            this.typeSort = 'down'
+          } else {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Temlate.toLowerCase()
+              let titleB = b.Temlate.toLowerCase()
+              if (titleA < titleB) return 1
+              if (titleA > titleB) return -1
+              return 0
+            })
+            this.sortTem = '↑'
+            this.typeSort = 'up'
+          }
+          break
+        case 'Comp':
+          this.sortfor = ''
+          this.sortTem = ''
+          this.sortTyp = ''
+          this.sortVer = ''
+          this.sortExp = ''
+          this.sortACT = ''
+          if (this.typeSort === 'up') {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Company.toLowerCase()
+              let titleB = b.Company.toLowerCase()
+              if (titleA < titleB) return -1
+              if (titleA > titleB) return 1
+              return 0
+            })
+            this.sortCom = '↓'
+            this.typeSort = 'down'
+          } else {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Company.toLowerCase()
+              let titleB = b.Company.toLowerCase()
+              if (titleA < titleB) return 1
+              if (titleA > titleB) return -1
+              return 0
+            })
+            this.sortCom = '↑'
+            this.typeSort = 'up'
+          }
+          break
+        case 'ACTI':
+          this.sortfor = ''
+          this.sortTem = ''
+          this.sortTyp = ''
+          this.sortCom = ''
+          this.sortVer = ''
+          this.sortExp = ''
+          if (this.typeSort === 'up') {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Active.toLowerCase()
+              let titleB = b.Active.toLowerCase()
+              if (titleA < titleB) return -1
+              if (titleA > titleB) return 1
+              return 0
+            })
+            this.sortACT = '↓'
+            this.typeSort = 'down'
+          } else {
+            this.arrayTemtam.sort((a, b) => {
+              let titleA = a.Active.toLowerCase()
+              let titleB = b.Active.toLowerCase()
+              if (titleA < titleB) return 1
+              if (titleA > titleB) return -1
+              return 0
+            })
+            this.sortACT = '↑'
+            this.typeSort = 'up'
+          }
+          break
+        case 'Expi':
+          this.sortfor = ''
+          this.sortTem = ''
+          this.sortTyp = ''
+          this.sortCom = ''
+          this.sortVer = ''
+          this.sortACT = ''
+          if (this.typeSort === 'up') {
+            this.arrayTemtam.sort((a, b) => {
+              a = a.ExpirationDate.toString().split('-')
+              b = b.ExpirationDate.toString().split('-')
+              return a[2] - b[2] || a[1] - b[1] || a[0] - b[0]
+            })
+            this.sortExp = '↓'
+            this.typeSort = 'down'
+          } else {
+            this.arrayTemtam.sort((a, b) => {
+              a = a.ExpirationDate.toString().split('-')
+              b = b.ExpirationDate.toString().split('-')
+              return b[2] - a[2] || b[1] - a[1] || b[0] - a[0]
+            })
+            this.sortExp = '↑'
+            this.typeSort = 'up'
+          }
+          break
+        case 'Vers':
+          this.sortfor = ''
+          this.sortTem = ''
+          this.sortTyp = ''
+          this.sortCom = ''
+          this.sortVer = ''
+          this.sortACT = ''
+          if (this.typeSort === 'up') {
+            this.arrayTemtam.sort((a, b) => {
+              a = a.VersionDate.toString().split('-')
+              b = b.VersionDate.toString().split('-')
+              return a[2] - b[2] || a[1] - b[1] || a[0] - b[0]
+            })
+            this.sortVer = '↓'
+            this.typeSort = 'down'
+          } else {
+            this.arrayTemtam.sort((a, b) => {
+              a = a.VersionDate.toString().split('-')
+              b = b.VersionDate.toString().split('-')
+              return b[2] - a[2] || b[1] - a[1] || b[0] - a[0]
+            })
+            this.sortVer = '↑'
+            this.typeSort = 'up'
+          }
+          break
+      }
     },
-    search (e) {
+    removeline (e) {
+      this.evenremove = e
+      this.arrayTemtam = []
+      // for (let i = 0; i <= this.arrayTem.length - 1; i++) {
+      //   this.arrayTemtam.push(this.arrayTem[i])
+      // }
+      this.trangtam = this.trang
+      this.trang = -10
     },
-    addtableline (e) {
+    filterData (e) {
+      this.showFilter = true
     },
-    FilterData (e) {
+    confirmFilter (e) {
+      this.showFilter = false
+      this.arrayTemtam = []
+      for (let i = 0; i <= this.arrayTem.length - 1; i++) {
+        this.arrayTemtam.push(this.arrayTem[i])
+      }
+      if (e.checkall === 'loc') {
+        for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
+          if (this.arrayTemtam[i].Type.includes(e.Type)) {
+          } else {
+            this.arrayTemtam.splice(i, 1)
+          }
+        }
+        for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
+          if (this.arrayTemtam[i].Company.includes(e.Company)) {
+          } else {
+            this.arrayTemtam.splice(i, 1)
+          }
+        }
+        for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
+          if (this.arrayTemtam[i].Active.includes(e.Active)) {
+          } else {
+            this.arrayTemtam.splice(i, 1)
+          }
+        }
+
+        //  if (e.VersionDate !== '' && e.VersionDate[4] === '-') { e.VersionDate = this.convertDate(e.VersionDate, '-', 'yyyy_mm_dd') }
+        if (e.VersionDate1[4] === '-') {
+          for (let i = this.arrayTemtam.length - 1; i >= 0; i--) {
+            let numberVer
+            let ngayv = Number(this.arrayTemtam[i].VersionDate.slice(0, 2))
+            let thangv = Number(this.arrayTemtam[i].VersionDate.slice(3, 5))
+            let namv = Number(this.arrayTemtam[i].VersionDate.slice(6, 10))
+            numberVer = namv * 360 + thangv * 30 + ngayv
+            let ngay
+            let thang
+            let nam
+            let dayNumber1
+            let datNumber2
+            if (e.VersionDate1.slice(4, 5) === '-') {
+              ngay = Number(e.VersionDate1.slice(0, 4))
+              thang = Number(e.VersionDate1.slice(5, 7))
+              nam = Number(e.VersionDate1.slice(8, 10))
+              dayNumber1 = ngay * 360 + thang * 30 + nam
+            }
+            if (e.VersionDate2.slice(4, 5) === '-') {
+              ngay = Number(e.VersionDate2.slice(0, 4))
+              thang = Number(e.VersionDate2.slice(5, 7))
+              nam = Number(e.VersionDate2.slice(8, 10))
+              datNumber2 = ngay * 360 + thang * 30 + nam
+            }
+            if (dayNumber1 <= numberVer && numberVer <= datNumber2) {
+            } else {
+              this.arrayTemtam.splice(i, 1)
+            }
+          }
+        }
+      } else {
+      }
+      this.checkFilterData = ''
     },
-    Handlechange (e) {
+    closeFilter (e) {
+      this.showFilter = false
+    },
+    allData (e) {
+      this.showFilter = false
+      this.arrayTemtam = []
+      for (let [, v] of this.arrayTem.entries()) {
+        this.arrayTemtam.push(v)
+      }
+      this.trang = -10
+    },
+    dropLeft (e) { // kiểm tra dropup hiển thị và ẩn
+      let checkEvent
+      try {
+        checkEvent = e.target.getAttribute('check') // nếu lỗi thì e là một đối tượng được gọi hàm trong methods
+        checkEvent = e.target
+      } catch (err) {
+        checkEvent = e
+      }
+      if (checkEvent.getAttribute('check') === '0') {
+        checkEvent.parentNode.style = 'display: block'
+        checkEvent.parentNode.childNodes[2].style = 'display: block'
+        checkEvent.setAttribute('check', '1')
+      } else {
+        checkEvent.parentNode.style = 'display: inline-block'
+        checkEvent.parentNode.childNodes[2].style = 'display: none'
+        checkEvent.setAttribute('check', '0')
+      }
+    },
+    convertDate: function (date, tt, type) {
+      let ngay
+      let thang
+      let nam
+      if (type === 'dd_mm_yyyy') {
+        ngay = date.slice(0, 2)
+        thang = date.slice(3, 5)
+        nam = date.slice(6, 10)
+        return nam + tt + thang + tt + ngay
+      }
+      if (type === 'yyyy_mm_dd') {
+        nam = date.slice(0, 4)
+        thang = date.slice(5, 7)
+        ngay = date.slice(8, 10)
+        return ngay + tt + thang + tt + nam
+      }
+    },
+    // randomNumber: function () {
+    randomNumber: function () {
+      let random10019999 = 1
+      let t = true
+      while (t) {
+        random10019999 = parseInt(Math.random() * (9999 - 1001) + 1001)
+        let i = 0
+        for (i = 0; i < this.arrayTem.length; i++) {
+          if (String(random10019999) === this.arrayTem[i].idfrom) {
+            break
+          }
+        }
+        if (i < this.arrayTem.length - 1) t = true
+        else t = false
+      }
+      return random10019999
     }
   }
 }
@@ -474,13 +1326,12 @@ a {
   padding: 5px;
 }
 .flex-container {
-  z-index: 1;
+  z-index: 5;
   min-width: 1100px;
   padding: 0px;
   margin: 0px;
   color: red;
   display: flex;
-  line-height: 16px;
   background-color: rgb(255, 0, 0);
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
@@ -489,6 +1340,7 @@ a {
   background-color: rgb(255, 0, 0);
   font-size: 20px;
   padding: 10px;
+  flex:1;
   border: 1px solid black;
   color: white;
 }
@@ -503,6 +1355,7 @@ a {
   border: 1px solid black;
   padding: 10px;
   font-size: 10px;
+  flex:1;
 }
 .flex-container:first-child div:last-child {
   background-attachment: fixed;
@@ -538,16 +1391,16 @@ a {
   margin-right: 5px;
   padding-right: 5px;
 }
-
 .nextpage {
   padding: 0px;
 }
 #nextpage {
+  display: flex;
   position: absolute;
   width: 100%;
   text-align: center;
   bottom: 25px;
-  background-color: NONE;
+  background-color: none;
   width: 40px;
   margin-left: 50%;
 }
