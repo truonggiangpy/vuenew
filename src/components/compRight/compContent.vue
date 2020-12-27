@@ -293,7 +293,7 @@ export default {
     return {
       evenRemove: {},
       trangtam: '',
-      trang: 0,
+      trang: 1,
       showFilter: false,
       showModel: false,
       typeSort: 'up',
@@ -481,7 +481,7 @@ export default {
       // let indexPage = parseInt(lengthrow / 5)
       this.arrayTemtam = []
       // let end
-      let trangtam = 5 * (this.trang + 1)
+      let trangtam = 5 * (this.trang)
       // if (indexPage === this.trang) { end = this.arrayTem.length - 1 } else {
       //   end = indexPage * 5 + 5
       // }
@@ -496,16 +496,16 @@ export default {
   },
   methods: {
     back (e) {
-      let indexPage
-      let lengthrow = this.arrayTem.length
-      if (lengthrow % 5 !== 0) {
-        indexPage = parseInt(lengthrow / 5)
-      } else {
-        indexPage = parseInt(lengthrow / 5) - 1
-      }
+      // let indexPage
+      // let lengthrow = this.arrayTem.length
+      // if (lengthrow % 5 !== 0) {
+      //   indexPage = parseInt(lengthrow / 5)
+      // } else {
+      //   indexPage = parseInt(lengthrow / 5) - 1
+      // }
       this.trang = this.trang - 1
-      if (this.trang < 0) {
-        this.trang = indexPage
+      if (this.trang < 1) {
+        this.trang = 1
       }
     },
     next (e) {
@@ -518,7 +518,7 @@ export default {
       }
       this.trang = this.trang + 1
       if (this.trang > indexPage) {
-        this.trang = 0
+        this.trang = indexPage + 1
       }
     },
     edit (event) {
@@ -817,7 +817,7 @@ export default {
           check = false
         }
       }
-      let indexAddLine = this.trang * 5 + 4
+      let indexAddLine = this.trang * 5 - 1
 
       if (check) {
         data.idfrom = this.randomNumber()
@@ -840,6 +840,7 @@ export default {
       const lengtharrayTem = e.target.parentNode.parentNode
       let Temlate = lengtharrayTem.childNodes[2].childNodes[0].value.length
       if (Temlate === 0) {
+        alert('Trường Tamplate chưa được nhập')
       } else {
         let getid = e.target.parentNode.parentNode.childNodes[0].innerHTML
         let type, Acti
@@ -860,8 +861,14 @@ export default {
         }
         DataAddfilterC.ExpirationDate = this.convertDate(DataAddfilterC.ExpirationDate, '-', 'yyyy_mm_dd')
         DataAddfilterC.VersionDate = this.convertDate(DataAddfilterC.VersionDate, '-', 'yyyy_mm_dd')
-        let indexAddLine = this.trang * 5 + 4
-        this.arrayTem.splice(indexAddLine, 1, DataAddfilterC)// thay thế phần từ cuối cùng
+        let idform = e.target.parentNode.parentNode.childNodes[0].innerHTML
+        for (let [i] of this.arrayTem.entries()) {
+          if (String(this.arrayTem[i].idfrom) === idform) {
+            this.arrayTem.splice(i, 1, DataAddfilterC)// thay thế phần từ cuối cùng
+          }
+        }
+        // let indexAddLine = this.trang * 5 - 1
+        // this.arrayTem.splice(indexAddLine, 1, DataAddfilterC)// thay thế phần từ cuối cùng
         // this.arrayTem.push(e)
         //   this.Temlate = "";
         //   this.Type = "";
@@ -886,7 +893,7 @@ export default {
       }
     },
     cancelAddLine (e) {
-      let indexAddLine = this.trang * 5 + 4
+      let indexAddLine = this.trang * 5 - 1
       this.arrayTem.splice(indexAddLine, 1)
       // this.arrayTemtam = []
       // for (let [, v] of this.arrayTem.entries()) {
@@ -910,33 +917,34 @@ export default {
           this.sortExp = ''
           this.sortACT = ''
           if (this.typeSort === 'up') {
-            for (let i = 0; i < this.arrayTemtam.length - 1; i++) { // buble sort
-              for (let j = this.arrayTemtam.length - 1; j > 0; j--) {
-                if (this.arrayTemtam[j].idfrom < this.arrayTemtam[ j - 1 ].idfrom) {
+            for (let i = 0; i < this.arrayTem.length - 1; i++) { // buble sort
+              for (let j = this.arrayTem.length - 1; j > 0; j--) {
+                if (this.arrayTem[j].idfrom < this.arrayTem[ j - 1 ].idfrom) {
                   let tam = {}
-                  tam = this.arrayTemtam[j]
-                  this.arrayTemtam[j] = this.arrayTemtam[ j - 1 ]
-                  this.arrayTemtam[ j - 1 ] = tam
+                  tam = this.arrayTem[j]
+                  this.arrayTem[j] = this.arrayTem[ j - 1 ]
+                  this.arrayTem[ j - 1 ] = tam
                 }
               }
             }
             this.sortfor = '↓'
             this.typeSort = 'down'
           } else {
-            for (let i = 0; i < this.arrayTemtam.length - 1; i++) { // buble sort
-              for (let j = this.arrayTemtam.length - 1; j > 0; j--) {
-                if (this.arrayTemtam[j].idfrom > this.arrayTemtam[ j - 1 ].idfrom) {
+            for (let i = 0; i < this.arrayTem.length - 1; i++) { // buble sort
+              for (let j = this.arrayTem.length - 1; j > 0; j--) {
+                if (this.arrayTem[j].idfrom > this.arrayTem[ j - 1 ].idfrom) {
                   let tam = {}
-                  tam = this.arrayTemtam[j]
-                  this.arrayTemtam[j] = this.arrayTemtam[ j - 1 ]
-                  this.arrayTemtam[ j - 1 ] = tam
+                  tam = this.arrayTem[j]
+                  this.arrayTem[j] = this.arrayTem[ j - 1 ]
+                  this.arrayTem[ j - 1 ] = tam
                 }
               }
             }
             this.sortfor = '↑'
             this.typeSort = 'up'
           }
-
+          this.trangtam = this.trang
+          this.trang = -10
           break
         case 'Type':
           this.sortfor = ''
@@ -946,7 +954,7 @@ export default {
           this.sortExp = ''
           this.sortACT = ''
           if (this.typeSort === 'up') {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Type.toLowerCase()
               let titleB = b.Type.toLowerCase()
               if (titleA < titleB) return -1
@@ -956,7 +964,7 @@ export default {
             this.sortTyp = '↓'
             this.typeSort = 'down'
           } else {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Type.toLowerCase()
               let titleB = b.Type.toLowerCase()
               if (titleA < titleB) return 1
@@ -966,6 +974,8 @@ export default {
             this.sortTyp = '↑'
             this.typeSort = 'up'
           }
+          this.trangtam = this.trang
+          this.trang = -10
           break
         case 'TemP':
           this.sortfor = ''
@@ -975,7 +985,7 @@ export default {
           this.sortExp = ''
           this.sortACT = ''
           if (this.typeSort === 'up') {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Temlate.toLowerCase()
               let titleB = b.Temlate.toLowerCase()
               if (titleA < titleB) return -1
@@ -985,7 +995,7 @@ export default {
             this.sortTem = '↓'
             this.typeSort = 'down'
           } else {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Temlate.toLowerCase()
               let titleB = b.Temlate.toLowerCase()
               if (titleA < titleB) return 1
@@ -995,6 +1005,8 @@ export default {
             this.sortTem = '↑'
             this.typeSort = 'up'
           }
+          this.trangtam = this.trang
+          this.trang = -10
           break
         case 'Comp':
           this.sortfor = ''
@@ -1004,7 +1016,7 @@ export default {
           this.sortExp = ''
           this.sortACT = ''
           if (this.typeSort === 'up') {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Company.toLowerCase()
               let titleB = b.Company.toLowerCase()
               if (titleA < titleB) return -1
@@ -1014,7 +1026,7 @@ export default {
             this.sortCom = '↓'
             this.typeSort = 'down'
           } else {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Company.toLowerCase()
               let titleB = b.Company.toLowerCase()
               if (titleA < titleB) return 1
@@ -1024,6 +1036,8 @@ export default {
             this.sortCom = '↑'
             this.typeSort = 'up'
           }
+          this.trangtam = this.trang
+          this.trang = -10
           break
         case 'ACTI':
           this.sortfor = ''
@@ -1033,7 +1047,7 @@ export default {
           this.sortVer = ''
           this.sortExp = ''
           if (this.typeSort === 'up') {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Active.toLowerCase()
               let titleB = b.Active.toLowerCase()
               if (titleA < titleB) return -1
@@ -1043,7 +1057,7 @@ export default {
             this.sortACT = '↓'
             this.typeSort = 'down'
           } else {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               let titleA = a.Active.toLowerCase()
               let titleB = b.Active.toLowerCase()
               if (titleA < titleB) return 1
@@ -1053,6 +1067,8 @@ export default {
             this.sortACT = '↑'
             this.typeSort = 'up'
           }
+          this.trangtam = this.trang
+          this.trang = -10
           break
         case 'Expi':
           this.sortfor = ''
@@ -1062,7 +1078,7 @@ export default {
           this.sortVer = ''
           this.sortACT = ''
           if (this.typeSort === 'up') {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               a = a.ExpirationDate.toString().split('-')
               b = b.ExpirationDate.toString().split('-')
               return a[2] - b[2] || a[1] - b[1] || a[0] - b[0]
@@ -1070,7 +1086,7 @@ export default {
             this.sortExp = '↓'
             this.typeSort = 'down'
           } else {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               a = a.ExpirationDate.toString().split('-')
               b = b.ExpirationDate.toString().split('-')
               return b[2] - a[2] || b[1] - a[1] || b[0] - a[0]
@@ -1078,6 +1094,8 @@ export default {
             this.sortExp = '↑'
             this.typeSort = 'up'
           }
+          this.trangtam = this.trang
+          this.trang = -10
           break
         case 'Vers':
           this.sortfor = ''
@@ -1087,7 +1105,7 @@ export default {
           this.sortVer = ''
           this.sortACT = ''
           if (this.typeSort === 'up') {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               a = a.VersionDate.toString().split('-')
               b = b.VersionDate.toString().split('-')
               return a[2] - b[2] || a[1] - b[1] || a[0] - b[0]
@@ -1095,7 +1113,7 @@ export default {
             this.sortVer = '↓'
             this.typeSort = 'down'
           } else {
-            this.arrayTemtam.sort((a, b) => {
+            this.arrayTem.sort((a, b) => {
               a = a.VersionDate.toString().split('-')
               b = b.VersionDate.toString().split('-')
               return b[2] - a[2] || b[1] - a[1] || b[0] - a[0]
@@ -1103,6 +1121,8 @@ export default {
             this.sortVer = '↑'
             this.typeSort = 'up'
           }
+          this.trangtam = this.trang
+          this.trang = -10
           break
       }
     },
