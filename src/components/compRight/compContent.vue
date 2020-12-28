@@ -458,6 +458,7 @@ export default {
     for (let i = 0; i < 5; i++) {
       this.arrayTemtam.push(this.arrayTem[i])
     }
+    history.pushState(null, null, 'Home')
   },
   computed: {
 
@@ -465,7 +466,11 @@ export default {
   watch: {
     search () {
       if (this.search.length !== 0) {
+        history.pushState(null, null, 'search=' + this.search)
         this.checkSearchtam = true
+      } else {
+        history.pushState(null, null, 'Home')
+        this.checkSearchtam = false
       }
       this.searchtam = []
       for (let [i] of this.arrayTem.entries()) {
@@ -477,7 +482,7 @@ export default {
           this.searchtam.splice(i, 1)
         }
       }
-      this.trangtam = this.trang
+      this.trangtam = 1
       this.trang = -10
     },
     trang () {
@@ -523,6 +528,7 @@ export default {
       if (this.trang < 1) {
         this.trang = 1
       }
+      history.pushState(null, null, 'page' + this.trang)
     },
     next (e) {
       let indexPage
@@ -536,8 +542,10 @@ export default {
       if (this.trang > indexPage) {
         this.trang = indexPage + 1
       }
+      history.pushState(null, null, 'page' + this.trang)
     },
     edit (event) {
+      history.pushState(null, null, 'edit')
       let elementtable = event.target.parentNode.parentNode.parentNode.parentNode.childNodes
       let getid = elementtable[0].innerHTML
       let getTemlate = elementtable[2].innerHTML
@@ -569,7 +577,7 @@ export default {
         }
       }
       if (check) {
-        this.index_edit = index
+        this.index_edit = index % 5
         data1.ExpirationDate = this.convertDate(data1.ExpirationDate.trim(), '-', 'dd_mm_yyyy')
         data1.VersionDate = this.convertDate(data1.VersionDate.trim(), '-', 'dd_mm_yyyy')
         this.arrayTem[-2] = this.arrayTem[index]
@@ -625,11 +633,20 @@ export default {
         //     index = i
         //   }
         // }
-        this.arrayTem.forEach((v, i) => { // foreach duyetj từ 0 - length
-          if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
-            index = i
-          }
-        })
+        if (this.search.length !== 0) {
+          // this.index_edit = this.searchtam.length % 5
+          // this.searchtam.forEach((v, i) => { // foreach duyetj từ 0 - length
+          //   if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
+          //     index = i
+          //   }
+          // })
+        } else {
+          this.arrayTem.forEach((v, i) => { // foreach duyetj từ 0 - length
+            if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
+              index = i
+            }
+          })
+        }
         this.arrayTem.splice(index, 1, DataAddfilterC)
         this.arrayTemtam = []
         this.trangtam = this.trang
@@ -680,6 +697,7 @@ export default {
       // }
     },
     editLine (e) {
+      history.pushState(null, null, 'editLine')
       let elementtable = event.target.parentNode.childNodes
       let getid = elementtable[0].innerHTML
       let getTemlate = elementtable[2].innerHTML
@@ -701,6 +719,7 @@ export default {
       }
       let index = 0
       let check = true
+
       for (let [i] of this.arrayTem.entries()) {
         if (String(data1.idfrom) === String(this.arrayTem[i].idfrom)) { // cùng dữ liệu nếu không sẻ bị lỗi
           index = i
@@ -710,11 +729,12 @@ export default {
         }
       }
       if (check) {
-        this.index_edit = index
+        this.index_edit = index % 5
         data1.ExpirationDate = this.convertDate(data1.ExpirationDate.trim(), '-', 'dd_mm_yyyy')
         data1.VersionDate = this.convertDate(data1.VersionDate.trim(), '-', 'dd_mm_yyyy')
         this.arrayTem[-2] = this.arrayTem[index]
         this.arrayTem.splice(index, 1, data1)
+        this.searchtam.splice(index, 1, data1)
       }
       this.arrayTem[-2].node2 = 'Edit'
       // this.arrayTemtam = []
@@ -762,10 +782,9 @@ export default {
         }
       }
       if (this.search.length !== 0) {
-        alert('hiihi')
-        for (let [i] of this.checkSearchtam.entries()) {
-          if (String(e.id) === String(this.checkSearchtam[i].idfrom)) {
-            this.checkSearchtam.splice(i, 1)
+        for (let [i] of this.searchtam.entries()) {
+          if (String(e.id) === String(this.searchtam[i].idfrom)) {
+            this.searchtam.splice(i, 1)
           }
         }
       }
@@ -786,6 +805,7 @@ export default {
       this.showModel = e
     },
     clickCreateTemp (e) {
+      history.pushState(null, null, 'Create')
       this.checkSearchtam = false
       this.showModel = true
       this.confirmBoolean = 'Create'
@@ -796,6 +816,7 @@ export default {
       this.trang = -10
     },
     createTem (e) {
+      history.pushState(null, null, 'Home')
       this.showModel = false
       let check = true
       e.ExpirationDate = this.convertDate(e.ExpirationDate, '-', 'yyyy_mm_dd')
@@ -823,9 +844,11 @@ export default {
       this.confirmEdit(e)
     },
     confirmCancel (e) { // dùng để xác nhận cancel khi đang tạo teamplate
+      history.pushState(null, null, 'Home')
       this.showModel = false
     },
     addTableLine (e) {
+      history.pushState(null, null, 'addLine')
       this.checkSearchtam = false
       var data = {
         idfrom: '',
@@ -845,7 +868,6 @@ export default {
         }
       }
       let indexAddLine = this.trang * 5 - 1
-
       if (check) {
         data.idfrom = this.randomNumber()
         this.arrayTem.splice(indexAddLine, 0, data)
@@ -864,6 +886,7 @@ export default {
       this.Active = ''
     },
     confirmAddLine (e) {
+      history.pushState(null, null, 'Home')
       const lengtharrayTem = e.target.parentNode.parentNode
       let Temlate = lengtharrayTem.childNodes[2].childNodes[0].value.length
       if (Temlate === 0) {
@@ -920,6 +943,7 @@ export default {
       }
     },
     cancelAddLine (e) {
+      history.pushState(null, null, 'Home')
       let indexAddLine = this.trang * 5 - 1
       this.arrayTem.splice(indexAddLine, 1)
       // this.arrayTemtam = []
@@ -936,6 +960,7 @@ export default {
       for (let i = 0; i <= this.arrayTem.length - 1; i++) {
         this.arrayTemtam.push(this.arrayTem[i])
       }
+      history.pushState(null, null, 'sort=' + tt)
       switch (tt) {
         case 'Form':
           this.sortTem = ''
@@ -1164,12 +1189,13 @@ export default {
       this.trang = -10
     },
     filterData (e) {
+      history.pushState(null, null, 'filter')
       this.showFilter = true
     },
     confirmFilter (e) {
-      if (this.search.length !== 0) {
-        this.checkSearchtam = true
-      }
+      // if (this.search.length !== 0) {
+      this.checkSearchtam = true
+      // }
       // this.searchtam = []
       // for (let [i] of this.arrayTem.entries()) {
       //   this.searchtam.push(this.arrayTem[i])
@@ -1558,7 +1584,7 @@ a {
   background-color: #ffffff;
   min-width: 60px;
   bottom: -20px;
-  right: 85px;
+  right: 105px;
   z-index: 1;
 }
 
