@@ -633,14 +633,25 @@ export default {
         //     index = i
         //   }
         // }
-        this.arrayTem.forEach((v, i) => { // foreach duyetj từ 0 - length
-          if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
-            index = i
-          }
-        })
+        this.checkSearchtam = false
+        this.search = ''
+        if (this.search.length !== 0) {
+
+          // this.index_edit = this.searchtam.length % 5
+          // this.searchtam.forEach((v, i) => { // foreach duyetj từ 0 - length
+          //   if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
+          //     index = i
+          //   }
+          // })
+        } else {
+          this.arrayTem.forEach((v, i) => { // foreach duyetj từ 0 - length
+            if (DataAddfilterC.idfrom === this.arrayTem[i].idfrom) {
+              index = i
+            }
+          })
+        }
         this.arrayTem.splice(index, 1, DataAddfilterC)
         this.arrayTemtam = []
-        this.trangtam = this.trang
         this.trang = -10
         // for (let i in this.arrayTem) {
         //   this.arrayTemtam.push(this.arrayTem[i])
@@ -725,13 +736,19 @@ export default {
         data1.VersionDate = this.convertDate(data1.VersionDate.trim(), '-', 'dd_mm_yyyy')
         this.arrayTem[-2] = this.arrayTem[index]
         this.arrayTem.splice(index, 1, data1)
+        // this.searchtam.splice(index, 1, data1)
+        this.checkSearchtam = false
       }
       this.arrayTem[-2].node2 = 'Edit'
       // this.arrayTemtam = []
       // for (let v of this.arrayTem) {
       //   this.arrayTemtam.push(v)
       // }
-      this.trangtam = this.trang
+      if (this.search.length !== '') {
+        this.trangtam = Math.floor(index / 5) + 1
+      } else {
+        this.trangtam = this.trang
+      }
       this.trang = -10
     },
     removeLine (e) {
@@ -1574,7 +1591,7 @@ a {
   background-color: #ffffff;
   min-width: 60px;
   bottom: -20px;
-  right: 85px;
+  right: 105px;
   z-index: 1;
 }
 
