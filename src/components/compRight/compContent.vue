@@ -44,7 +44,7 @@
           @dblclick="editLine"
         >
           <div class="col1">{{ user.idfrom }}</div>
-          <div class="col2" v-if="user.node2 == 'Edit'">{{ user.Temlate }}</div>
+          <div class="col2" v-if="user.node2 == null">{{ user.Template }}</div>
           <div class="col2" v-else-if="user.node2 == 'Cancel'">
             <input
               @keyup.enter="confirmAddLine"
@@ -69,7 +69,7 @@
               name="Temlate_Name"
             />
           </div>
-          <div class="col3" v-if="user.node2 == 'Edit'">{{ user.Type }}</div>
+          <div class="col3" v-if="user.node2 == null">{{ user.Type }}</div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <select
               @keyup.enter="confirmAddLine"
@@ -98,7 +98,7 @@
               <option value="Production">Production</option>
             </select>
           </div>
-          <div class="col4" v-if="user.node2 == 'Edit'">{{ user.Company }}</div>
+          <div class="col4" v-if="user.node2 == null">{{ user.Company }}</div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <input
               @keyup.enter="confirmAddLine"
@@ -125,7 +125,7 @@
               name="Company"
             />
           </div>
-          <div class="col5" v-if="user.node2 == 'Edit'">
+          <div class="col5" v-if="user.node2 == null">
             {{ user.VersionDate }}
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
@@ -152,8 +152,8 @@
               value="0000-00-00"
             />
           </div>
-          <div class="col6" v-if="user.node2 == 'Edit'">
-            {{ user.ExpirationDate }}
+          <div class="col6" v-if="user.node2 == null">
+            {{ user.ExpirationD }}
           </div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <input
@@ -179,7 +179,7 @@
               value="1999-02-10"
             />
           </div>
-          <div class="col7" v-if="user.node2 == 'Edit'">{{ user.Active }}</div>
+          <div class="col7" v-if="user.node2 == null">{{ user.Active }}</div>
           <div class="col3" v-else-if="user.node2 == 'Cancel'">
             <select
               @keyup.enter="confirmAddLine"
@@ -211,7 +211,7 @@
           <div
             id="dd"
             class="col8"
-            v-if="user.node2 == 'Edit'"
+            v-if="user.node2 == null"
             style="text-align: center"
           >
           <!-- <div class="dropup">
@@ -278,8 +278,14 @@
 
 </template>
 <script>
+import axios from 'axios'
 import compCreateUnion from './compCreateUnion.vue'
 import compFilter from './compFilter.vue'
+
+const api = axios.create({
+  baseURL: 'http://localhost:3000/'
+})
+
 export default {
   name: 'container',
   components: {
@@ -455,16 +461,18 @@ export default {
     }
   },
   created () {
-    for (let i = 0; i < 5; i++) {
-      this.arrayTemtam.push(this.arrayTem[i])
-    }
-    history.pushState(null, null, 'Home')
+  },
+  mounted () {
+    api
+      .get('/tasks')
+      .then(response => (this.arrayTemtam = response.data))
   },
   computed: {
 
   },
   watch: {
     search () {
+      alert(this.arrayTemtam[0]._id)
       if (this.search.length !== 0) {
         history.pushState(null, null, 'search=' + this.search)
         this.checkSearchtam = true
@@ -779,34 +787,19 @@ export default {
     confirmRemove (e) {
       this.showModel = false
       let index = 0
-      let check = true
-      for (let [i] of this.arrayTem.entries()) {
-        if (String(e.id) === String(this.arrayTem[i].idfrom)) {
+      // let check = true
+      for (let [i] of this.arrayTemtam.entries()) {
+        if (String(e.id) === String(this.arrayTemtam[i].idfrom)) {
           index = i
         }
-        if (this.arrayTem[i].node2 === 'Cancel_row' || this.arrayTem[i].node2 === 'Cancel') {
-          check = false
-        }
       }
-      if (this.search.length !== 0) {
-        for (let [i] of this.searchtam.entries()) {
-          if (String(e.id) === String(this.searchtam[i].idfrom)) {
-            this.searchtam.splice(i, 1)
-          }
-        }
-      }
-      if (check) {
-        this.arrayTem.splice(index, 1)
-        this.$emit('removeline', e)
-      } else {
-        alert('đang có trường xử lý')
-      }
-      this.trangtam = this.trang
-      this.trang = -10
-      // this.arrayTemtam = []
-      // for (let v of this.arrayTem) {
-      //   this.arrayTemtam.push(v)
-      // }
+
+      api.get('/task/delete/' + this.arrayTemtam[index]._id)
+        .then(response => {
+        })
+      axios
+        .get('http://localhost:3000/tasks')
+        .then(response => (this.arrayTemtam = response.data))
     },
     cancelRemove (e) {
       this.showModel = e
@@ -816,36 +809,49 @@ export default {
       this.checkSearchtam = false
       this.showModel = true
       this.confirmBoolean = 'Create'
-      // console.log("apphihi"+ this.create_confirm_boolean)
-      // this.$emit('changeeven',e)
-      this.arrayTemtam = []
-      this.trangtam = this.trang
-      this.trang = -10
+      // this.arrayTemtam = []
+      // this.trangtam = this.trang
+      // this.trang = -10
     },
     createTem (e) {
-      history.pushState(null, null, 'Home')
+      // history.pushState(null, null, 'Home')
       this.showModel = false
-      let check = true
-      e.ExpirationDate = this.convertDate(e.ExpirationDate, '-', 'yyyy_mm_dd')
-      e.VersionDate = this.convertDate(e.VersionDate, '-', 'yyyy_mm_dd')
-      e.idfrom = this.randomNumber()
-      if (this.arrayTem.length === 0) { this.arrayTem[-1] = e }
-      // if (this.arrayTem[this.arrayTem.length - 1].node2 !== 'Cancel') {
-      //   this.arrayTem.push(e) // cập nhật lại giá trị arrayTem
-      for (let [i] of this.arrayTem.entries()) {
-        if (this.arrayTem[i].node2 === 'Cancel_row' || this.arrayTem[i].node2 === 'Cancel') {
-          check = false
-        }
-      }
-      if (check) {
-        this.arrayTem.push(e)
-      } else {
-        alert('Đang Tạo Bảng bằng dòng, hãy Bấm Cancel để quay lại')
-      }
-      this.arrayTem.Temlate = this.arrayTem.Temlate + ' '
-      this.create_confirm_boolean = e.return_create_confirm_boolean
-      this.arrayTemtam = []
-      this.trang = -10
+      // let check = true
+      // e.ExpirationDate = this.convertDate(e.ExpirationDate, '-', 'yyyy_mm_dd')
+      // e.VersionDate = this.convertDate(e.VersionDate, '-', 'yyyy_mm_dd')
+      // e.idfrom = this.randomNumber()
+      // if (this.arrayTem.length === 0) { this.arrayTem[-1] = e }
+      // for (let [i] of this.arrayTem.entries()) {
+      //   if (this.arrayTem[i].node2 === 'Cancel_row' || this.arrayTem[i].node2 === 'Cancel') {
+      //     check = false
+      //   }
+      // }
+      // if (check) {
+      //   this.arrayTem.push(e)
+      // } else {
+      //   alert('Đang Tạo Bảng bằng dòng, hãy Bấm Cancel để quay lại')
+      // }
+      alert(e.ExpirationDate)
+      axios.post('http://localhost:3000/tasks', {
+        idfrom: this.randomNumber(),
+        Template: e.Temlate,
+        Type: false,
+        Company: e.Company,
+        VersionDate: e.VersionDate,
+        ExpirationD: e.ExpirationDate,
+        Active: true
+      })
+        .then(response => {})
+        .catch(e => {
+          this.errors.push(e)
+        })
+      axios
+        .get('http://localhost:3000/tasks')
+        .then(response => (this.arrayTemtam = response.data))
+      // this.arrayTem.Temlate = this.arrayTem.Temlate + ' '
+      // this.create_confirm_boolean = e.return_create_confirm_boolean
+      // this.arrayTemtam = []
+      // this.trang = -10
     },
     confirmEnter (e) {
       this.confirmEdit(e)
@@ -1349,7 +1355,7 @@ export default {
 }
 #control{
   display: flex;
-
+  line-height: 30px;
 }
 #hahaserch {
   width: 600px;
@@ -1429,16 +1435,15 @@ a {
   padding: 0px;
   margin: 0px;
   color: red;
-  display: flex;
-  background-color: rgb(255, 0, 0);
+  display: -webkit-box;
+  /* background-color: rgb(255, 0, 0); */
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
 }
 .flex-container > .style {
   background-color: rgb(255, 0, 0);
   font-size: 20px;
-  padding: 10px;
-  flex:1;
+  /* flex:1; */
   border: 1px solid black;
   color: white;
 }
@@ -1451,9 +1456,11 @@ a {
   background-color: rgb(255, 255, 255);
   color: rgb(0, 0, 0);
   border: 1px solid black;
-  padding: 10px;
-  font-size: 10px;
-  flex:1;
+  font-size: 12px;
+  padding: 10px 0px;
+  display: -webkit-box;
+  justify-content: center;
+  /* flex:1; */
 }
 .flex-container:first-child div:last-child {
   background-attachment: fixed;
@@ -1479,7 +1486,7 @@ a {
 }
 .tdata {
   position: absolute;
-  overflow-y: overlay;
+  /* overflow-y: overlay; */
   height: 100%;
   width: 100%;
 }
@@ -1569,7 +1576,7 @@ a {
   width: 10%;
 }
 .col8 {
-  width: 10%;
+  width: 9%;
 }
 .dropbtn {
   font-size: 20px;
@@ -1591,7 +1598,7 @@ a {
   background-color: #ffffff;
   min-width: 60px;
   bottom: -20px;
-  right: 105px;
+  right: 30px;
   z-index: 1;
 }
 
